@@ -8,6 +8,27 @@
   </head>
   <body>
     <main class="app-frame">
+      <header class="app-header">
+        <div class="brand-lockup">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Jiu Jitsu Lab</span>
+        </div>
+        <nav class="global-actions" aria-label="Lab actions">
+          <button id="share-move" type="button" aria-label="Share move">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" />
+              <path d="M12 15V3M7 8l5-5 5 5" />
+            </svg>
+          </button>
+          <button id="community-toggle" type="button" aria-label="Open inbox and community">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 5h16v10H7l-3 3V5Z" />
+              <path d="M8 9h8M8 12h5" />
+            </svg>
+          </button>
+        </nav>
+      </header>
+
       <section class="mat-panel" aria-label="Mat canvas">
         <div class="center-empty">
           <div class="mark" aria-hidden="true">
@@ -39,29 +60,7 @@
       </section>
 
       <section class="chat-panel" aria-label="AI chat">
-        <header class="chat-topbar">
-          <h1>Jiu jitsu move lab</h1>
-          <nav class="topbar-icons" aria-label="Chat actions">
-            <button id="new-chat" type="button" aria-label="New chat">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-            </button>
-            <button id="history-toggle" type="button" aria-label="History">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 7v5l3 2" />
-                <path d="M21 12a9 9 0 1 1-2.64-6.36" />
-              </svg>
-            </button>
-          </nav>
-        </header>
-
         <div class="chat-stage" id="chat-stage">
-          <div class="history-panel" id="history-panel" aria-hidden="true">
-            <button type="button">Standing ankle lock idea</button>
-            <button type="button">Guard pass chain</button>
-            <button type="button">Rules review draft</button>
-          </div>
           <div class="messages" id="messages" aria-live="polite"></div>
         </div>
 
@@ -70,6 +69,19 @@
           <textarea id="prompt" rows="3" placeholder="Describe the exact position you want to test."></textarea>
 
           <footer class="composer-footer">
+            <div class="attach-wrap">
+              <button class="ghost-icon" id="attach-toggle" type="button" aria-label="Attach material">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
+              <div class="attach-menu" id="attach-menu" aria-hidden="true">
+                <button type="button" data-attach="Upload video">Upload video</button>
+                <button type="button" data-attach="Paste YouTube link">Paste YouTube link</button>
+                <button type="button" data-attach="Attach image/reference">Attach image/reference</button>
+                <button type="button" data-attach="Import move file">Import move file</button>
+              </div>
+            </div>
             <div class="input-actions">
               <button class="ghost-icon" id="voice-toggle" type="button" aria-label="Voice input">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -86,6 +98,28 @@
           </footer>
         </form>
       </section>
+
+      <aside class="drawer" id="community-drawer" aria-hidden="true" aria-label="Inbox and community drawer">
+        <header class="drawer-header">
+          <span>Network</span>
+          <button id="drawer-close" type="button" aria-label="Close drawer">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </header>
+        <nav class="drawer-tabs" aria-label="Drawer tabs">
+          <button class="active" type="button" data-tab="inbox">Inbox</button>
+          <button type="button" data-tab="friends">Friends</button>
+          <button type="button" data-tab="community">Community</button>
+          <button type="button" data-tab="saved">Saved</button>
+        </nav>
+        <div class="drawer-content" id="drawer-content">
+          <p class="drawer-kicker">Inbox</p>
+          <h2>No move packages yet</h2>
+          <p>Shared moves will appear here with positions, grips, pressure points, timing steps, AI notes, simulation state, and source references.</p>
+        </div>
+      </aside>
     </main>
 
     <script src="app.js"></script>
