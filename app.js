@@ -5,9 +5,13 @@ const attachToggle = document.querySelector("#attach-toggle");
 const attachMenu = document.querySelector("#attach-menu");
 const voiceToggle = document.querySelector("#voice-toggle");
 const shareMove = document.querySelector("#share-move");
+const sharePopover = document.querySelector("#share-popover");
+const shareRecipient = document.querySelector("#share-recipient");
+const shareNote = document.querySelector("#share-note");
+const sendMove = document.querySelector("#send-move");
+const shareStatus = document.querySelector("#share-status");
 const communityToggle = document.querySelector("#community-toggle");
 const drawer = document.querySelector("#community-drawer");
-const drawerClose = document.querySelector("#drawer-close");
 const drawerTabs = document.querySelector(".drawer-tabs");
 const drawerContent = document.querySelector("#drawer-content");
 
@@ -47,8 +51,10 @@ composer.addEventListener("submit", (event) => {
   promptInput.value = "";
   promptInput.blur();
 
+  const pending = addMessage("Thinking...", "assistant thinking");
   window.setTimeout(() => {
-    addMessage("Got it. I would map the athletes first, then check the pressure direction before calling it legal.", "assistant");
+    pending.className = "message assistant";
+    pending.textContent = "Got it. I would map the athletes first, then check the pressure direction before calling it legal.";
   }, 180);
 });
 
@@ -69,28 +75,29 @@ attachMenu.addEventListener("click", (event) => {
     return;
   }
 
-  addMessage(`${item.dataset.attach} queued for move analysis.`, "assistant");
+  addMessage(`Analyzing ${item.dataset.attach.toLowerCase()}...`, "assistant thinking");
   attachMenu.classList.remove("is-open");
   attachMenu.setAttribute("aria-hidden", "true");
 });
 
 shareMove.addEventListener("click", () => {
-  const packageSummary = [
-    "Move package ready:",
-    "move name, dummy positions, grips, pressure points, timing steps, AI notes, simulation state, optional source video/reference.",
-  ].join(" ");
+  const open = sharePopover.classList.toggle("is-open");
+  sharePopover.setAttribute("aria-hidden", String(!open));
+  drawer.classList.remove("is-open");
+  drawer.setAttribute("aria-hidden", "true");
+  attachMenu.classList.remove("is-open");
+  attachMenu.setAttribute("aria-hidden", "true");
 
-  addMessage(packageSummary, "assistant");
+  if (open) {
+    shareRecipient.focus();
+  }
 });
 
 communityToggle.addEventListener("click", () => {
-  drawer.classList.add("is-open");
-  drawer.setAttribute("aria-hidden", "false");
-});
-
-drawerClose.addEventListener("click", () => {
-  drawer.classList.remove("is-open");
-  drawer.setAttribute("aria-hidden", "true");
+  const open = drawer.classList.toggle("is-open");
+  drawer.setAttribute("aria-hidden", String(!open));
+  sharePopover.classList.remove("is-open");
+  sharePopover.setAttribute("aria-hidden", "true");
 });
 
 drawerTabs.addEventListener("click", (event) => {
@@ -112,10 +119,43 @@ drawerTabs.addEventListener("click", (event) => {
   `;
 });
 
+sendMove.addEventListener("click", () => {
+  const recipient = shareRecipient.value.trim();
+
+  if (!recipient) {
+    shareStatus.textContent = "Add a recipient name, username, or email.";
+    shareRecipient.focus();
+    return;
+  }
+
+  shareStatus.textContent = `Move package staged for ${recipient}. Email notification can be sent when accounts are connected.`;
+  shareNote.value = "";
+});
+
+document.addEventListener("click", (event) => {
+  const target = event.target;
+
+  if (!sharePopover.contains(target) && !shareMove.contains(target)) {
+    sharePopover.classList.remove("is-open");
+    sharePopover.setAttribute("aria-hidden", "true");
+  }
+
+  if (!drawer.contains(target) && !communityToggle.contains(target)) {
+    drawer.classList.remove("is-open");
+    drawer.setAttribute("aria-hidden", "true");
+  }
+
+  if (!attachMenu.contains(target) && !attachToggle.contains(target)) {
+    attachMenu.classList.remove("is-open");
+    attachMenu.setAttribute("aria-hidden", "true");
+  }
+});
+
 function addMessage(text, type) {
   const message = document.createElement("p");
   message.className = `message ${type}`;
   message.textContent = text;
   messages.append(message);
   messages.scrollTop = messages.scrollHeight;
+  return message;
 }

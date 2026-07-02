@@ -29,6 +29,37 @@
         </nav>
       </header>
 
+      <section class="share-popover" id="share-popover" aria-hidden="true" aria-label="Share move package">
+        <header class="share-header">
+          <span>Share move</span>
+          <small>Move package</small>
+        </header>
+        <label class="field-label" for="share-recipient">Recipient name / email</label>
+        <input id="share-recipient" type="text" autocomplete="off" placeholder="name, username, or email" />
+        <label class="field-label" for="share-note">Add a note</label>
+        <textarea id="share-note" rows="2" placeholder="Optional"></textarea>
+        <div class="package-preview" aria-label="Move package preview">
+          <div>
+            <span>Move</span>
+            <strong>Untitled ankle entry</strong>
+          </div>
+          <div>
+            <span>Position</span>
+            <strong>Standing neutral</strong>
+          </div>
+          <div>
+            <span>Steps</span>
+            <strong>0 timing steps</strong>
+          </div>
+          <div>
+            <span>Source</span>
+            <strong>None attached</strong>
+          </div>
+        </div>
+        <button class="share-send" id="send-move" type="button">Send move</button>
+        <p class="share-status" id="share-status" aria-live="polite"></p>
+      </section>
+
       <section class="mat-panel" aria-label="Mat canvas">
         <div class="center-empty">
           <div class="mark" aria-hidden="true">
@@ -102,11 +133,6 @@
       <aside class="drawer" id="community-drawer" aria-hidden="true" aria-label="Inbox and community drawer">
         <header class="drawer-header">
           <span>Network</span>
-          <button id="drawer-close" type="button" aria-label="Close drawer">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
-          </button>
         </header>
         <nav class="drawer-tabs" aria-label="Drawer tabs">
           <button class="active" type="button" data-tab="inbox">Inbox</button>
