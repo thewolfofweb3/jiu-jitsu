@@ -37,7 +37,7 @@ textarea {
 
 .app-frame {
   display: grid;
-  grid-template-columns: clamp(232px, 18.8vw, 343px) minmax(0, 1fr) clamp(430px, 46.7vw, 852px);
+  grid-template-columns: minmax(0, 1fr) clamp(430px, 46.7vw, 852px);
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -46,52 +46,11 @@ textarea {
   background: var(--black);
 }
 
-.workspace-panel,
 .mat-panel,
 .chat-panel {
   min-width: 0;
   min-height: 0;
   background: var(--page);
-}
-
-.workspace-panel {
-  border-right: 1px solid var(--line);
-}
-
-.workspace-title {
-  height: clamp(55px, 3.35vw, 61px);
-  padding: clamp(20px, 1.32vw, 24px) 18px 0;
-  border-bottom: 1px solid var(--soft-line);
-  color: var(--muted);
-  font-size: clamp(13px, 0.88vw, 16px);
-  font-weight: 760;
-  line-height: 1;
-}
-
-.file-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  height: 48px;
-  padding: 26px 23px 0;
-  border: 0;
-  color: #a7a7a7;
-  background: transparent;
-  font-size: clamp(15px, 0.99vw, 18px);
-  font-weight: 670;
-  line-height: 1;
-  text-align: left;
-}
-
-.md-icon {
-  display: inline-grid;
-  place-items: center;
-  width: 22px;
-  height: 14px;
-  color: #d8dee8;
-  font-size: 9px;
-  font-weight: 900;
 }
 
 .mat-panel {
@@ -337,7 +296,7 @@ textarea {
 
 @media (max-width: 1200px) {
   .app-frame {
-    grid-template-columns: 220px minmax(0, 1fr) minmax(390px, 46vw);
+    grid-template-columns: minmax(0, 1fr) minmax(390px, 46vw);
   }
 }
 
@@ -348,13 +307,12 @@ textarea {
 
   .app-frame {
     grid-template-columns: 1fr;
-    grid-template-rows: 180px 420px 520px;
+    grid-template-rows: 420px 520px;
     height: auto;
     min-height: 100vh;
     border-radius: 0;
   }
 
-  .workspace-panel,
   .mat-panel {
     border-right: 0;
     border-bottom: 1px solid var(--line);
