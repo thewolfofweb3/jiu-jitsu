@@ -37,7 +37,7 @@ textarea {
 
 .app-frame {
   display: grid;
-  grid-template-columns: 343px minmax(420px, 1fr) 852px;
+  grid-template-columns: clamp(232px, 18.8vw, 343px) minmax(0, 1fr) clamp(430px, 46.7vw, 852px);
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -59,11 +59,11 @@ textarea {
 }
 
 .workspace-title {
-  height: 61px;
-  padding: 24px 18px 0;
+  height: clamp(55px, 3.35vw, 61px);
+  padding: clamp(20px, 1.32vw, 24px) 18px 0;
   border-bottom: 1px solid var(--soft-line);
   color: var(--muted);
-  font-size: 16px;
+  font-size: clamp(13px, 0.88vw, 16px);
   font-weight: 760;
   line-height: 1;
 }
@@ -73,13 +73,13 @@ textarea {
   align-items: center;
   gap: 12px;
   width: 100%;
-  height: 52px;
-  padding: 31px 23px 0;
+  height: 48px;
+  padding: 26px 23px 0;
   border: 0;
   color: #a7a7a7;
   background: transparent;
-  font-size: 18px;
-  font-weight: 680;
+  font-size: clamp(15px, 0.99vw, 18px);
+  font-weight: 670;
   line-height: 1;
   text-align: left;
 }
@@ -103,21 +103,21 @@ textarea {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 332px;
-  transform: translate(-50%, -35%);
+  width: clamp(278px, 18.2vw, 332px);
+  transform: translate(-50%, -34%);
 }
 
 .mark {
   position: relative;
-  width: 116px;
-  height: 116px;
-  margin: 0 auto 51px;
+  width: clamp(86px, 6.35vw, 116px);
+  height: clamp(86px, 6.35vw, 116px);
+  margin: 0 auto clamp(38px, 2.8vw, 51px);
 }
 
 .mark span {
   position: absolute;
-  width: 48px;
-  height: 48px;
+  width: 41.4%;
+  height: 41.4%;
   background: #303030;
 }
 
@@ -147,16 +147,16 @@ textarea {
 
 .shortcuts {
   display: grid;
-  gap: 17px;
+  gap: clamp(12px, 0.94vw, 17px);
 }
 
 .shortcut-row {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 22px;
+  gap: clamp(16px, 1.2vw, 22px);
   color: #757575;
-  font-size: 20px;
+  font-size: clamp(16px, 1.1vw, 20px);
   font-weight: 610;
   line-height: 1;
 }
@@ -164,9 +164,9 @@ textarea {
 .keys {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   color: #666666;
-  font-size: 14px;
+  font-size: clamp(12px, 0.77vw, 14px);
   font-weight: 800;
 }
 
@@ -174,10 +174,10 @@ kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 29px;
-  height: 26px;
-  padding: 0 9px;
-  border-radius: 8px;
+  min-width: clamp(25px, 1.6vw, 29px);
+  height: clamp(22px, 1.43vw, 26px);
+  padding: 0 clamp(7px, 0.5vw, 9px);
+  border-radius: 7px;
   color: #b9b9b9;
   background: #171717;
   font: inherit;
@@ -185,38 +185,38 @@ kbd {
 
 .chat-panel {
   display: grid;
-  grid-template-rows: 67px minmax(0, 1fr) 235px;
+  grid-template-rows: clamp(58px, 3.68vw, 67px) minmax(0, 1fr) clamp(184px, 12.9vw, 235px);
 }
 
 .chat-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 67px;
-  padding: 0 25px 0 18px;
+  height: clamp(58px, 3.68vw, 67px);
+  padding: 0 clamp(18px, 1.37vw, 25px) 0 18px;
   border-bottom: 1px solid var(--soft-line);
 }
 
 h1 {
   margin: 0;
   color: #f1f1f1;
-  font-size: 22px;
-  font-weight: 760;
+  font-size: clamp(18px, 1.2vw, 22px);
+  font-weight: 750;
   line-height: 1;
 }
 
 .topbar-icons {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: clamp(18px, 1.32vw, 24px);
 }
 
 .topbar-icons button,
 .ghost-icon {
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: clamp(19px, 1.32vw, 24px);
+  height: clamp(19px, 1.32vw, 24px);
   padding: 0;
   border: 0;
   color: #444444;
@@ -240,19 +240,19 @@ svg {
 
 .composer {
   align-self: end;
-  height: 212px;
-  margin: 13px 13px 8px;
-  padding: 21px 20px 13px 24px;
+  height: clamp(156px, 11.6vw, 212px);
+  margin: clamp(9px, 0.72vw, 13px) clamp(10px, 0.72vw, 13px) 8px;
+  padding: clamp(16px, 1.15vw, 21px) clamp(16px, 1.1vw, 20px) 13px clamp(18px, 1.32vw, 24px);
   border: 1px solid #2d2d2d;
-  border-radius: 15px;
+  border-radius: 14px;
   background: var(--card);
 }
 
 .composer label,
 textarea {
   color: #f0f0f0;
-  font-size: 21px;
-  font-weight: 720;
+  font-size: clamp(16px, 1.15vw, 21px);
+  font-weight: 710;
   line-height: 1.33;
 }
 
@@ -264,7 +264,7 @@ textarea {
 textarea {
   display: block;
   width: 100%;
-  min-height: 56px;
+  min-height: clamp(42px, 3.05vw, 56px);
   padding: 0;
   resize: none;
   border: 0;
@@ -277,55 +277,55 @@ textarea {
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 9px;
+  margin-top: clamp(4px, 0.5vw, 9px);
 }
 
 .model-picker {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 34px;
+  height: clamp(28px, 1.86vw, 34px);
   padding: 0;
   border: 0;
   color: #666666;
   background: transparent;
-  font-size: 18px;
+  font-size: clamp(14px, 0.99vw, 18px);
   font-weight: 540;
   cursor: pointer;
 }
 
 .model-picker .ai {
-  font-size: 17px;
+  font-size: clamp(13px, 0.93vw, 17px);
   font-weight: 820;
   letter-spacing: -0.02em;
 }
 
 .model-picker svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   stroke-width: 2.2;
 }
 
 .input-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: clamp(8px, 0.66vw, 12px);
 }
 
 .ghost-icon {
-  width: 26px;
-  height: 26px;
+  width: clamp(20px, 1.43vw, 26px);
+  height: clamp(20px, 1.43vw, 26px);
   color: #7a7a7a;
 }
 
 .send-button {
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 58px;
-  padding: 13px;
-  border: 7px solid #26273d;
-  border-radius: 18px;
+  width: clamp(46px, 3.18vw, 58px);
+  height: clamp(46px, 3.18vw, 58px);
+  padding: clamp(10px, 0.72vw, 13px);
+  border: clamp(5px, 0.38vw, 7px) solid #26273d;
+  border-radius: clamp(14px, 0.99vw, 18px);
   color: #121212;
   background: #fbfbfb;
   cursor: pointer;
@@ -337,7 +337,7 @@ textarea {
 
 @media (max-width: 1200px) {
   .app-frame {
-    grid-template-columns: 260px minmax(360px, 1fr) minmax(420px, 47vw);
+    grid-template-columns: 220px minmax(0, 1fr) minmax(390px, 46vw);
   }
 }
 
