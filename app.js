@@ -1,6 +1,9 @@
 const composer = document.querySelector("#composer");
 const promptInput = document.querySelector("#prompt");
 const messages = document.querySelector("#messages");
+const matPanel = document.querySelector(".mat-panel");
+const centerEmpty = document.querySelector(".center-empty");
+const spawnState = document.querySelector("#spawn-state");
 const attachToggle = document.querySelector("#attach-toggle");
 const attachMenu = document.querySelector("#attach-menu");
 const voiceToggle = document.querySelector("#voice-toggle");
@@ -16,6 +19,13 @@ const drawerTabs = document.querySelector(".drawer-tabs");
 const drawerContent = document.querySelector("#drawer-content");
 const ANALYSIS_DELAY_RANGE = [1600, 2400];
 const NORMAL_DELAY_RANGE = [900, 1400];
+
+const shortcuts = {
+  openMat: { ctrlKey: true, key: "m" },
+  spawnDummies: { ctrlKey: true, key: "d" },
+  shareMove: { ctrlKey: true, shiftKey: true, key: "s" },
+  openInbox: { ctrlKey: true, shiftKey: true, key: "i" },
+};
 
 const drawerCopy = {
   inbox: {
@@ -75,23 +85,11 @@ attachMenu.addEventListener("click", (event) => {
 });
 
 shareMove.addEventListener("click", () => {
-  const open = sharePopover.classList.toggle("is-open");
-  sharePopover.setAttribute("aria-hidden", String(!open));
-  drawer.classList.remove("is-open");
-  drawer.setAttribute("aria-hidden", "true");
-  attachMenu.classList.remove("is-open");
-  attachMenu.setAttribute("aria-hidden", "true");
-
-  if (open) {
-    shareRecipient.focus();
-  }
+  toggleSharePopover();
 });
 
 communityToggle.addEventListener("click", () => {
-  const open = drawer.classList.toggle("is-open");
-  drawer.setAttribute("aria-hidden", String(!open));
-  sharePopover.classList.remove("is-open");
-  sharePopover.setAttribute("aria-hidden", "true");
+  toggleDrawer();
 });
 
 drawerTabs.addEventListener("click", (event) => {
@@ -145,6 +143,74 @@ document.addEventListener("click", (event) => {
   }
 });
 
+document.addEventListener("keydown", (event) => {
+  const target = event.target;
+  const inTypingField = target.closest("input, textarea");
+
+  if (matchesShortcut(event, shortcuts.openMat)) {
+    event.preventDefault();
+    openMat();
+    return;
+  }
+
+  if (!inTypingField && matchesShortcut(event, shortcuts.spawnDummies)) {
+    event.preventDefault();
+    spawnDummies();
+    return;
+  }
+
+  if (matchesShortcut(event, shortcuts.shareMove)) {
+    event.preventDefault();
+    toggleSharePopover(true);
+    return;
+  }
+
+  if (matchesShortcut(event, shortcuts.openInbox)) {
+    event.preventDefault();
+    toggleDrawer(true);
+  }
+});
+
+function matchesShortcut(event, shortcut) {
+  return event.key.toLowerCase() === shortcut.key
+    && Boolean(event.ctrlKey || event.metaKey) === Boolean(shortcut.ctrlKey)
+    && Boolean(event.shiftKey) === Boolean(shortcut.shiftKey)
+    && Boolean(event.altKey) === Boolean(shortcut.altKey);
+}
+
+function openMat() {
+  matPanel.classList.add("is-open");
+  centerEmpty.classList.add("is-muted");
+}
+
+function spawnDummies() {
+  openMat();
+  spawnState.classList.add("is-active");
+  spawnState.setAttribute("aria-hidden", "false");
+}
+
+function toggleSharePopover(forceOpen) {
+  const open = forceOpen ?? !sharePopover.classList.contains("is-open");
+  sharePopover.classList.toggle("is-open", open);
+  sharePopover.setAttribute("aria-hidden", String(!open));
+  drawer.classList.remove("is-open");
+  drawer.setAttribute("aria-hidden", "true");
+  attachMenu.classList.remove("is-open");
+  attachMenu.setAttribute("aria-hidden", "true");
+
+  if (open) {
+    shareRecipient.focus();
+  }
+}
+
+function toggleDrawer(forceOpen) {
+  const open = forceOpen ?? !drawer.classList.contains("is-open");
+  drawer.classList.toggle("is-open", open);
+  drawer.setAttribute("aria-hidden", String(!open));
+  sharePopover.classList.remove("is-open");
+  sharePopover.setAttribute("aria-hidden", "true");
+}
+
 async function sendMessage(text) {
   addMessage(text, "user");
   promptInput.value = "";
@@ -178,7 +244,7 @@ async function sendAnalysisMessage(text) {
 function getAssistantReply(text) {
   const analysis = isAnalysisRequest(text);
   const reply = analysis
-    ? "I’ll treat that as source material, extract the key positions, identify grips and pressure points, then stage the move for simulation review."
+    ? "I'll treat that as source material, extract the key positions, identify grips and pressure points, then stage the move for simulation review."
     : "Got it. I would map the athletes first, then check the pressure direction before calling it legal.";
 
   return Promise.resolve(reply);

@@ -261,6 +261,10 @@ textarea {
   pointer-events: none;
 }
 
+.mat-panel.is-open::after {
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
 .center-empty {
   position: absolute;
   z-index: 1;
@@ -268,6 +272,57 @@ textarea {
   top: 50%;
   width: clamp(248px, 16.6vw, 302px);
   transform: translate(-50%, -34%);
+}
+
+.center-empty.is-muted {
+  opacity: 0.36;
+}
+
+.spawn-state {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: none;
+  width: 220px;
+  height: 120px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.spawn-state.is-active {
+  display: block;
+}
+
+.spawn-state span {
+  position: absolute;
+  bottom: 20px;
+  width: 44px;
+  height: 88px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px 18px 10px 10px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.spawn-state span::before {
+  position: absolute;
+  top: -24px;
+  left: 10px;
+  width: 22px;
+  height: 22px;
+  content: "";
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+}
+
+.spawn-state span:first-child {
+  left: 55px;
+  transform: rotate(-6deg);
+}
+
+.spawn-state span:last-child {
+  right: 55px;
+  transform: rotate(6deg);
 }
 
 .mark {
