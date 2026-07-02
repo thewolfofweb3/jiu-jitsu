@@ -14,6 +14,8 @@ const communityToggle = document.querySelector("#community-toggle");
 const drawer = document.querySelector("#community-drawer");
 const drawerTabs = document.querySelector(".drawer-tabs");
 const drawerContent = document.querySelector("#drawer-content");
+const ANALYSIS_DELAY_RANGE = [1600, 2400];
+const NORMAL_DELAY_RANGE = [900, 1400];
 
 const drawerCopy = {
   inbox: {
@@ -47,15 +49,7 @@ composer.addEventListener("submit", (event) => {
     return;
   }
 
-  addMessage(text, "user");
-  promptInput.value = "";
-  promptInput.blur();
-
-  const pending = addMessage("Thinking...", "assistant thinking");
-  window.setTimeout(() => {
-    pending.className = "message assistant";
-    pending.textContent = "Got it. I would map the athletes first, then check the pressure direction before calling it legal.";
-  }, 180);
+  sendMessage(text);
 });
 
 attachToggle.addEventListener("click", () => {
@@ -75,7 +69,7 @@ attachMenu.addEventListener("click", (event) => {
     return;
   }
 
-  addMessage(`Analyzing ${item.dataset.attach.toLowerCase()}...`, "assistant thinking");
+  sendAnalysisMessage(`Analyze ${item.dataset.attach.toLowerCase()}`);
   attachMenu.classList.remove("is-open");
   attachMenu.setAttribute("aria-hidden", "true");
 });
@@ -150,6 +144,100 @@ document.addEventListener("click", (event) => {
     attachMenu.setAttribute("aria-hidden", "true");
   }
 });
+
+async function sendMessage(text) {
+  addMessage(text, "user");
+  promptInput.value = "";
+  promptInput.blur();
+
+  const thinking = addMessage("Thinking", "assistant thinking");
+  const stopThinking = animateThinking(thinking);
+  const thinkingMs = randomBetween(...(isAnalysisRequest(text) ? ANALYSIS_DELAY_RANGE : NORMAL_DELAY_RANGE));
+
+  const [reply] = await Promise.all([
+    getAssistantReply(text),
+    wait(thinkingMs),
+  ]);
+
+  stopThinking();
+  await typeAssistantMessage(thinking, reply);
+}
+
+async function sendAnalysisMessage(text) {
+  const thinking = addMessage("Thinking", "assistant thinking");
+  const stopThinking = animateThinking(thinking);
+  const [reply] = await Promise.all([
+    getAssistantReply(text),
+    wait(randomBetween(...ANALYSIS_DELAY_RANGE)),
+  ]);
+
+  stopThinking();
+  await typeAssistantMessage(thinking, reply);
+}
+
+function getAssistantReply(text) {
+  const analysis = isAnalysisRequest(text);
+  const reply = analysis
+    ? "I’ll treat that as source material, extract the key positions, identify grips and pressure points, then stage the move for simulation review."
+    : "Got it. I would map the athletes first, then check the pressure direction before calling it legal.";
+
+  return Promise.resolve(reply);
+}
+
+function isAnalysisRequest(text) {
+  return /analy[sz]e|video|youtube|upload|attach|image|reference|import|breakdown|clip|match/i.test(text);
+}
+
+function animateThinking(element) {
+  let tick = 0;
+  element.textContent = "Thinking";
+
+  const timer = window.setInterval(() => {
+    tick = (tick + 1) % 4;
+    element.textContent = `Thinking${tick ? ` ${".".repeat(tick)}` : ""}`;
+  }, 340);
+
+  return () => window.clearInterval(timer);
+}
+
+async function typeAssistantMessage(element, fullText) {
+  element.className = "message assistant typing";
+  element.textContent = "";
+
+  const chars = Array.from(fullText);
+  const long = chars.length > 220;
+  const baseDelay = long ? 15 : 27;
+  const chunkSize = long ? 2 : 1;
+  const estimated = Math.ceil(chars.length / chunkSize) * baseDelay;
+  const targetDuration = clamp(estimated, 700, long ? 9000 : 7000);
+  const delay = targetDuration / Math.ceil(chars.length / chunkSize);
+
+  let index = 0;
+
+  while (index < chars.length) {
+    index = Math.min(index + chunkSize, chars.length);
+    element.textContent = chars.slice(0, index).join("");
+    messages.scrollTop = messages.scrollHeight;
+    await wait(delay + randomBetween(-4, 6));
+  }
+
+  element.textContent = fullText;
+  element.className = "message assistant done";
+}
+
+function wait(ms) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, Math.max(0, ms));
+  });
+}
+
+function randomBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
 
 function addMessage(text, type) {
   const message = document.createElement("p");
