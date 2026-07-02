@@ -37,7 +37,7 @@ textarea {
 
 .app-frame {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(430px, 46.7vw, 852px);
+  grid-template-columns: minmax(0, 1fr) clamp(380px, 38vw, 690px);
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -62,15 +62,15 @@ textarea {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: clamp(278px, 18.2vw, 332px);
+  width: clamp(248px, 16.6vw, 302px);
   transform: translate(-50%, -34%);
 }
 
 .mark {
   position: relative;
-  width: clamp(86px, 6.35vw, 116px);
-  height: clamp(86px, 6.35vw, 116px);
-  margin: 0 auto clamp(38px, 2.8vw, 51px);
+  width: clamp(76px, 5.45vw, 99px);
+  height: clamp(76px, 5.45vw, 99px);
+  margin: 0 auto clamp(32px, 2.35vw, 43px);
 }
 
 .mark span {
@@ -81,32 +81,32 @@ textarea {
 }
 
 .mark span:nth-child(1) {
-  left: 16px;
+  left: 13.8%;
   top: 0;
   clip-path: polygon(31% 0, 100% 0, 100% 55%, 55% 100%, 0 45%);
 }
 
 .mark span:nth-child(2) {
-  right: 10px;
+  right: 8.6%;
   top: 1px;
   clip-path: polygon(45% 0, 100% 52%, 100% 100%, 32% 100%, 0 68%);
 }
 
 .mark span:nth-child(3) {
-  left: 16px;
-  bottom: 5px;
+  left: 13.8%;
+  bottom: 4.3%;
   clip-path: polygon(0 0, 54% 0, 100% 45%, 45% 100%, 0 54%);
 }
 
 .mark span:nth-child(4) {
-  right: 3px;
+  right: 2.6%;
   bottom: 0;
   clip-path: polygon(0 0, 52% 0, 100% 48%, 100% 100%, 36% 100%, 0 64%);
 }
 
 .shortcuts {
   display: grid;
-  gap: clamp(12px, 0.94vw, 17px);
+  gap: clamp(10px, 0.76vw, 14px);
 }
 
 .shortcut-row {
@@ -115,28 +115,28 @@ textarea {
   align-items: center;
   gap: clamp(16px, 1.2vw, 22px);
   color: #757575;
-  font-size: clamp(16px, 1.1vw, 20px);
-  font-weight: 610;
+  font-size: clamp(14px, 0.96vw, 17px);
+  font-weight: 590;
   line-height: 1;
 }
 
 .keys {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   color: #666666;
-  font-size: clamp(12px, 0.77vw, 14px);
-  font-weight: 800;
+  font-size: clamp(11px, 0.66vw, 12px);
+  font-weight: 760;
 }
 
 kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: clamp(25px, 1.6vw, 29px);
-  height: clamp(22px, 1.43vw, 26px);
-  padding: 0 clamp(7px, 0.5vw, 9px);
-  border-radius: 7px;
+  min-width: clamp(22px, 1.42vw, 26px);
+  height: clamp(20px, 1.26vw, 23px);
+  padding: 0 clamp(6px, 0.44vw, 8px);
+  border-radius: 6px;
   color: #b9b9b9;
   background: #171717;
   font: inherit;
@@ -144,38 +144,38 @@ kbd {
 
 .chat-panel {
   display: grid;
-  grid-template-rows: clamp(58px, 3.68vw, 67px) minmax(0, 1fr) clamp(184px, 12.9vw, 235px);
+  grid-template-rows: clamp(52px, 3.18vw, 58px) minmax(0, 1fr) clamp(158px, 10.3vw, 188px);
 }
 
 .chat-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: clamp(58px, 3.68vw, 67px);
-  padding: 0 clamp(18px, 1.37vw, 25px) 0 18px;
+  height: clamp(52px, 3.18vw, 58px);
+  padding: 0 clamp(16px, 1.1vw, 20px) 0 17px;
   border-bottom: 1px solid var(--soft-line);
 }
 
 h1 {
   margin: 0;
   color: #f1f1f1;
-  font-size: clamp(18px, 1.2vw, 22px);
-  font-weight: 750;
+  font-size: clamp(16px, 1.03vw, 19px);
+  font-weight: 720;
   line-height: 1;
 }
 
 .topbar-icons {
   display: flex;
   align-items: center;
-  gap: clamp(18px, 1.32vw, 24px);
+  gap: clamp(16px, 1.04vw, 19px);
 }
 
 .topbar-icons button,
 .ghost-icon {
   display: grid;
   place-items: center;
-  width: clamp(19px, 1.32vw, 24px);
-  height: clamp(19px, 1.32vw, 24px);
+  width: clamp(17px, 1.1vw, 20px);
+  height: clamp(17px, 1.1vw, 20px);
   padding: 0;
   border: 0;
   color: #444444;
@@ -194,36 +194,104 @@ svg {
 }
 
 .chat-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  min-height: 0;
+  overflow: hidden;
+  padding: 14px;
   border-bottom: 1px solid var(--soft-line);
+}
+
+.history-panel {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  z-index: 2;
+  display: none;
+  width: min(260px, calc(100% - 28px));
+  padding: 7px;
+  border: 1px solid #2b2b2b;
+  border-radius: 8px;
+  background: #111111;
+}
+
+.history-panel.is-open {
+  display: grid;
+  gap: 4px;
+}
+
+.history-panel button {
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 6px;
+  color: #8f8f8f;
+  background: transparent;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.history-panel button:hover {
+  color: #d8d8d8;
+  background: #191919;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 100%;
+  overflow: auto;
+}
+
+.message {
+  max-width: 82%;
+  padding: 9px 11px;
+  border: 1px solid #262626;
+  border-radius: 8px;
+  color: #cfcfcf;
+  background: #111111;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.message.user {
+  align-self: flex-end;
+  color: #eeeeee;
+  background: #171717;
 }
 
 .composer {
   align-self: end;
-  height: clamp(156px, 11.6vw, 212px);
-  margin: clamp(9px, 0.72vw, 13px) clamp(10px, 0.72vw, 13px) 8px;
-  padding: clamp(16px, 1.15vw, 21px) clamp(16px, 1.1vw, 20px) 13px clamp(18px, 1.32vw, 24px);
+  height: clamp(136px, 9.1vw, 166px);
+  margin: clamp(8px, 0.56vw, 10px) clamp(9px, 0.6vw, 11px) 7px;
+  padding: clamp(13px, 0.88vw, 16px) clamp(14px, 0.94vw, 17px) 11px clamp(15px, 1vw, 18px);
   border: 1px solid #2d2d2d;
-  border-radius: 14px;
+  border-radius: 12px;
   background: var(--card);
 }
 
 .composer label,
 textarea {
   color: #f0f0f0;
-  font-size: clamp(16px, 1.15vw, 21px);
-  font-weight: 710;
-  line-height: 1.33;
+  font-size: clamp(14px, 0.93vw, 17px);
+  font-weight: 650;
+  line-height: 1.31;
 }
 
 .composer label {
   display: block;
-  margin: 0 0 7px;
+  margin: 0 0 5px;
 }
 
 textarea {
   display: block;
   width: 100%;
-  min-height: clamp(42px, 3.05vw, 56px);
+  min-height: clamp(36px, 2.35vw, 43px);
   padding: 0;
   resize: none;
   border: 0;
@@ -235,33 +303,33 @@ textarea {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
-  margin-top: clamp(4px, 0.5vw, 9px);
+  gap: 12px;
+  margin-top: clamp(3px, 0.32vw, 6px);
 }
 
 .model-picker {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: clamp(28px, 1.86vw, 34px);
+  height: clamp(25px, 1.54vw, 28px);
   padding: 0;
   border: 0;
   color: #666666;
   background: transparent;
-  font-size: clamp(14px, 0.99vw, 18px);
+  font-size: clamp(12px, 0.77vw, 14px);
   font-weight: 540;
   cursor: pointer;
 }
 
 .model-picker .ai {
-  font-size: clamp(13px, 0.93vw, 17px);
+  font-size: clamp(12px, 0.72vw, 13px);
   font-weight: 820;
   letter-spacing: -0.02em;
 }
 
 .model-picker svg {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
   stroke-width: 2.2;
 }
 
@@ -272,19 +340,23 @@ textarea {
 }
 
 .ghost-icon {
-  width: clamp(20px, 1.43vw, 26px);
-  height: clamp(20px, 1.43vw, 26px);
+  width: clamp(18px, 1.15vw, 21px);
+  height: clamp(18px, 1.15vw, 21px);
   color: #7a7a7a;
+}
+
+.ghost-icon.is-listening {
+  color: #d8d8d8;
 }
 
 .send-button {
   display: grid;
   place-items: center;
-  width: clamp(46px, 3.18vw, 58px);
-  height: clamp(46px, 3.18vw, 58px);
-  padding: clamp(10px, 0.72vw, 13px);
-  border: clamp(5px, 0.38vw, 7px) solid #26273d;
-  border-radius: clamp(14px, 0.99vw, 18px);
+  width: clamp(40px, 2.52vw, 46px);
+  height: clamp(40px, 2.52vw, 46px);
+  padding: clamp(9px, 0.58vw, 11px);
+  border: clamp(4px, 0.27vw, 5px) solid #25263a;
+  border-radius: clamp(12px, 0.77vw, 14px);
   color: #121212;
   background: #fbfbfb;
   cursor: pointer;
@@ -296,7 +368,7 @@ textarea {
 
 @media (max-width: 1200px) {
   .app-frame {
-    grid-template-columns: minmax(0, 1fr) minmax(390px, 46vw);
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 38vw);
   }
 }
 
