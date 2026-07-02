@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jiu Jitsu Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-frame">
+      <aside class="workspace-panel">
+        <header class="workspace-title">WORKSPACE</header>
+        <button class="file-item" type="button">
+          <span class="md-icon">M↕</span>
+          <span>README.md</span>
+        </button>
+      </aside>
+
+      <section class="mat-panel" aria-label="Mat workspace">
+        <div class="center-empty">
+          <div class="mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="shortcuts">
+            <div class="shortcut-row">
+              <span>Toggle file tree</span>
+              <div class="keys"><kbd>Ctrl</kbd><span>+</span><kbd>B</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span>Toggle editor</span>
+              <div class="keys"><kbd>Ctrl</kbd><span>+</span><kbd>Alt</kbd><span>+</span><kbd>E</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span>New file</span>
+              <div class="keys"><kbd>Ctrl</kbd><span>+</span><kbd>Alt</kbd><span>+</span><kbd>N</kbd></div>
+            </div>
+            <div class="shortcut-row">
+              <span>New chat</span>
+              <div class="keys"><kbd>Ctrl</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>L</kbd></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chat-panel" aria-label="AI chat">
+        <header class="chat-topbar">
+          <h1>Jiu jitsu move lab</h1>
+          <nav class="topbar-icons" aria-label="Chat actions">
+            <button type="button" aria-label="New chat">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </button>
+            <button type="button" aria-label="History">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 7v5l3 2" />
+                <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+              </svg>
+            </button>
+          </nav>
+        </header>
+
+        <div class="chat-stage"></div>
+
+        <form class="composer" id="composer">
+          <label for="prompt">Describe the exact position you want to test.</label>
+          <textarea id="prompt" rows="3">Set both athletes standing in the center of the mat. I want to test a white belt legal straight ankle variation.</textarea>
+
+          <footer class="composer-footer">
+            <button class="model-picker" type="button">
+              <span class="ai">AI</span>
+              <span>White belt rules</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="m4 6 4 4 4-4" />
+              </svg>
+            </button>
+
+            <div class="input-actions">
+              <button class="ghost-icon" type="button" aria-label="Voice input">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" />
+                  <path d="M19 11a7 7 0 0 1-14 0M12 18v3M8 21h8" />
+                </svg>
+              </button>
+              <button class="send-button" type="submit" aria-label="Send">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 19V5M5 12l7-7 7 7" />
+                </svg>
+              </button>
+            </div>
+          </footer>
+        </form>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
