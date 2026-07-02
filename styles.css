@@ -3,12 +3,12 @@
   --black: #000;
   --page: #050505;
   --panel: #0b0b0b;
-  --line: #292929;
-  --soft-line: #242424;
+  --line: rgba(255, 255, 255, 0.14);
+  --soft-line: rgba(255, 255, 255, 0.09);
   --text: #eeeeee;
-  --muted: #858585;
-  --dim: #555555;
-  --card: #171717;
+  --muted: #767676;
+  --dim: #4c4c4c;
+  --card: #121212;
 }
 
 * {
@@ -37,12 +37,12 @@ textarea {
 
 .app-frame {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(380px, 38vw, 690px);
+  grid-template-columns: minmax(0, 1fr) clamp(360px, 34vw, 620px);
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 11px;
   background: var(--black);
 }
 
@@ -56,10 +56,27 @@ textarea {
 .mat-panel {
   position: relative;
   border-right: 1px solid var(--line);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.035), transparent 38%),
+    var(--page);
+  background-size: 42px 42px, 42px 42px, 100% 100%, auto;
+}
+
+.mat-panel::after {
+  position: absolute;
+  inset: 12%;
+  content: "";
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  border-radius: 50%;
+  transform: rotateX(58deg);
+  pointer-events: none;
 }
 
 .center-empty {
   position: absolute;
+  z-index: 1;
   left: 50%;
   top: 50%;
   width: clamp(248px, 16.6vw, 302px);
@@ -77,7 +94,7 @@ textarea {
   position: absolute;
   width: 41.4%;
   height: 41.4%;
-  background: #303030;
+  background: #282828;
 }
 
 .mark span:nth-child(1) {
@@ -115,8 +132,8 @@ textarea {
   align-items: center;
   gap: clamp(16px, 1.2vw, 22px);
   color: #757575;
-  font-size: clamp(14px, 0.96vw, 17px);
-  font-weight: 590;
+  font-size: clamp(13px, 0.85vw, 15px);
+  font-weight: 520;
   line-height: 1;
 }
 
@@ -136,31 +153,31 @@ kbd {
   min-width: clamp(22px, 1.42vw, 26px);
   height: clamp(20px, 1.26vw, 23px);
   padding: 0 clamp(6px, 0.44vw, 8px);
-  border-radius: 6px;
-  color: #b9b9b9;
-  background: #171717;
+  border-radius: 5px;
+  color: #ababab;
+  background: #151515;
   font: inherit;
 }
 
 .chat-panel {
   display: grid;
-  grid-template-rows: clamp(52px, 3.18vw, 58px) minmax(0, 1fr) clamp(158px, 10.3vw, 188px);
+  grid-template-rows: clamp(54px, 3.18vw, 58px) minmax(0, 1fr) clamp(148px, 8.9vw, 162px);
 }
 
 .chat-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: clamp(52px, 3.18vw, 58px);
-  padding: 0 clamp(16px, 1.1vw, 20px) 0 17px;
+  height: clamp(54px, 3.18vw, 58px);
+  padding: 0 clamp(14px, 0.95vw, 17px) 0 16px;
   border-bottom: 1px solid var(--soft-line);
 }
 
 h1 {
   margin: 0;
   color: #f1f1f1;
-  font-size: clamp(16px, 1.03vw, 19px);
-  font-weight: 720;
+  font-size: clamp(17px, 1.03vw, 19px);
+  font-weight: 650;
   line-height: 1;
 }
 
@@ -178,7 +195,7 @@ h1 {
   height: clamp(17px, 1.1vw, 20px);
   padding: 0;
   border: 0;
-  color: #444444;
+  color: #3c3c3c;
   background: transparent;
   cursor: pointer;
 }
@@ -201,7 +218,7 @@ svg {
   gap: 10px;
   min-height: 0;
   overflow: hidden;
-  padding: 14px;
+  padding: 10px;
   border-bottom: 1px solid var(--soft-line);
 }
 
@@ -212,10 +229,10 @@ svg {
   z-index: 2;
   display: none;
   width: min(260px, calc(100% - 28px));
-  padding: 7px;
-  border: 1px solid #2b2b2b;
-  border-radius: 8px;
-  background: #111111;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 7px;
+  background: #101010;
 }
 
 .history-panel.is-open {
@@ -225,10 +242,10 @@ svg {
 
 .history-panel button {
   width: 100%;
-  padding: 9px 10px;
+  padding: 8px 9px;
   border: 0;
-  border-radius: 6px;
-  color: #8f8f8f;
+  border-radius: 5px;
+  color: #7d7d7d;
   background: transparent;
   font-size: 13px;
   text-align: left;
@@ -251,11 +268,11 @@ svg {
 .message {
   max-width: 82%;
   padding: 9px 11px;
-  border: 1px solid #262626;
-  border-radius: 8px;
-  color: #cfcfcf;
-  background: #111111;
-  font-size: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #bbbbbb;
+  background: #101010;
+  font-size: 12px;
   line-height: 1.35;
 }
 
@@ -266,26 +283,24 @@ svg {
 }
 
 .composer {
+  display: flex;
+  flex-direction: column;
   align-self: end;
-  height: clamp(136px, 9.1vw, 166px);
-  margin: clamp(8px, 0.56vw, 10px) clamp(9px, 0.6vw, 11px) 7px;
-  padding: clamp(13px, 0.88vw, 16px) clamp(14px, 0.94vw, 17px) 11px clamp(15px, 1vw, 18px);
-  border: 1px solid #2d2d2d;
-  border-radius: 12px;
+  height: clamp(142px, 8.7vw, 158px);
+  margin: clamp(8px, 0.55vw, 10px) clamp(8px, 0.55vw, 10px) 8px;
+  padding: clamp(11px, 0.72vw, 13px) clamp(11px, 0.78vw, 14px) 10px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
   background: var(--card);
-}
-
-.composer label,
-textarea {
-  color: #f0f0f0;
-  font-size: clamp(14px, 0.93vw, 17px);
-  font-weight: 650;
-  line-height: 1.31;
 }
 
 .composer label {
   display: block;
   margin: 0 0 5px;
+  color: #c7c7c7;
+  font-size: clamp(15px, 0.88vw, 16px);
+  font-weight: 500;
+  line-height: 1.28;
 }
 
 textarea {
@@ -296,7 +311,11 @@ textarea {
   resize: none;
   border: 0;
   outline: 0;
+  color: #dddddd;
   background: transparent;
+  font-size: clamp(15px, 0.88vw, 16px);
+  font-weight: 500;
+  line-height: 1.28;
 }
 
 .composer-footer {
@@ -304,7 +323,7 @@ textarea {
   align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
-  margin-top: clamp(3px, 0.32vw, 6px);
+  margin-top: auto;
 }
 
 .model-picker {
@@ -314,16 +333,16 @@ textarea {
   height: clamp(25px, 1.54vw, 28px);
   padding: 0;
   border: 0;
-  color: #666666;
+  color: #565656;
   background: transparent;
-  font-size: clamp(12px, 0.77vw, 14px);
-  font-weight: 540;
+  font-size: clamp(11px, 0.72vw, 13px);
+  font-weight: 500;
   cursor: pointer;
 }
 
 .model-picker .ai {
   font-size: clamp(12px, 0.72vw, 13px);
-  font-weight: 820;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
@@ -342,7 +361,7 @@ textarea {
 .ghost-icon {
   width: clamp(18px, 1.15vw, 21px);
   height: clamp(18px, 1.15vw, 21px);
-  color: #7a7a7a;
+  color: #676767;
 }
 
 .ghost-icon.is-listening {
@@ -352,13 +371,13 @@ textarea {
 .send-button {
   display: grid;
   place-items: center;
-  width: clamp(40px, 2.52vw, 46px);
-  height: clamp(40px, 2.52vw, 46px);
-  padding: clamp(9px, 0.58vw, 11px);
-  border: clamp(4px, 0.27vw, 5px) solid #25263a;
-  border-radius: clamp(12px, 0.77vw, 14px);
+  width: clamp(40px, 2.42vw, 44px);
+  height: clamp(40px, 2.42vw, 44px);
+  padding: clamp(9px, 0.58vw, 10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
   color: #121212;
-  background: #fbfbfb;
+  background: #eeeeee;
   cursor: pointer;
 }
 
@@ -368,7 +387,7 @@ textarea {
 
 @media (max-width: 1200px) {
   .app-frame {
-    grid-template-columns: minmax(0, 1fr) minmax(360px, 38vw);
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 34vw);
   }
 }
 
