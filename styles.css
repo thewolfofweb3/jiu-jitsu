@@ -328,35 +328,8 @@ textarea::placeholder {
 .composer-footer {
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: flex-end;
   margin-top: auto;
-}
-
-.model-picker {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: clamp(25px, 1.54vw, 28px);
-  padding: 0;
-  border: 0;
-  color: #565656;
-  background: transparent;
-  font-size: clamp(11px, 0.72vw, 13px);
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.model-picker .ai {
-  font-size: clamp(12px, 0.72vw, 13px);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.model-picker svg {
-  width: 12px;
-  height: 12px;
-  stroke-width: 2.2;
 }
 
 .input-actions {
@@ -378,11 +351,11 @@ textarea::placeholder {
 .send-button {
   display: grid;
   place-items: center;
-  width: clamp(40px, 2.42vw, 44px);
-  height: clamp(40px, 2.42vw, 44px);
-  padding: clamp(9px, 0.58vw, 10px);
+  width: clamp(36px, 2.14vw, 39px);
+  height: clamp(36px, 2.14vw, 39px);
+  padding: clamp(8px, 0.49vw, 9px);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 10px;
+  border-radius: 9px;
   color: #121212;
   background: #eeeeee;
   cursor: pointer;
