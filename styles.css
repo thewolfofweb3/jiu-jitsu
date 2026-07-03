@@ -285,9 +285,15 @@ textarea {
   z-index: 1;
   display: none;
   overflow: hidden;
-  perspective: 980px;
+  --room-left: 18%;
+  --room-right: 82%;
+  --room-top: 14%;
+  --room-horizon: 47%;
+  --room-near-left: -10%;
+  --room-near-right: 110%;
+  --grid-line: rgba(255, 255, 255, 0.055);
   background:
-    radial-gradient(circle at 50% 68%, rgba(255, 255, 255, 0.08), transparent 44%),
+    radial-gradient(circle at 50% 68%, rgba(255, 255, 255, 0.06), transparent 42%),
     linear-gradient(#060606, #010101);
 }
 
@@ -299,92 +305,111 @@ textarea {
 .room-ceiling,
 .room-floor {
   position: absolute;
-  left: 50%;
-  transform-style: preserve-3d;
+  inset: 0;
 }
 
 .room-wall,
-.room-ceiling {
-  border: 1px solid rgba(255, 255, 255, 0.075);
+.room-ceiling,
+.room-floor {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 40px 40px;
   background-color: rgba(255, 255, 255, 0.018);
-  box-shadow: inset 0 0 42px rgba(0, 0, 0, 0.72);
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.1));
 }
 
 .wall-back {
-  top: 15%;
-  width: min(65vw, 760px);
-  height: 32%;
-  transform: translateX(-50%);
+  z-index: 2;
+  clip-path: polygon(
+    var(--room-left) var(--room-top),
+    var(--room-right) var(--room-top),
+    var(--room-right) var(--room-horizon),
+    var(--room-left) var(--room-horizon)
+  );
+  background-color: rgba(255, 255, 255, 0.014);
 }
 
 .wall-left {
-  top: 15%;
-  width: min(34vw, 390px);
-  height: 32%;
-  transform: translateX(calc(-50% - min(32.5vw, 380px))) rotateY(63deg);
-  transform-origin: right center;
+  z-index: 2;
+  clip-path: polygon(
+    0 3%,
+    var(--room-left) var(--room-top),
+    var(--room-left) var(--room-horizon),
+    0 58%
+  );
+  background-size: 43px 43px;
+  background-color: rgba(255, 255, 255, 0.017);
 }
 
 .wall-right {
-  top: 15%;
-  width: min(34vw, 390px);
-  height: 32%;
-  transform: translateX(min(32.5vw, 380px)) rotateY(-63deg);
-  transform-origin: left center;
+  z-index: 2;
+  clip-path: polygon(
+    100% 3%,
+    var(--room-right) var(--room-top),
+    var(--room-right) var(--room-horizon),
+    100% 58%
+  );
+  background-size: 43px 43px;
+  background-color: rgba(255, 255, 255, 0.017);
 }
 
 .room-ceiling {
-  top: -9%;
-  width: min(99vw, 1160px);
-  height: 32%;
-  transform: translateX(-50%) rotateX(-64deg);
-  transform-origin: center bottom;
+  z-index: 1;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    var(--room-right) var(--room-top),
+    var(--room-left) var(--room-top)
+  );
+  background-size: 56px 56px;
+  background-color: rgba(255, 255, 255, 0.012);
 }
 
 .room-floor {
-  bottom: -27%;
-  width: min(116vw, 1360px);
-  height: 82%;
-  transform: translateX(-50%) rotateX(62deg);
-  transform-origin: center top;
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  z-index: 1;
+  clip-path: polygon(
+    var(--room-left) var(--room-horizon),
+    var(--room-right) var(--room-horizon),
+    var(--room-near-right) 100%,
+    var(--room-near-left) 100%
+  );
   background:
-    radial-gradient(circle at center, rgba(255, 255, 255, 0.06), transparent 48%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
-  box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.78);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% 76%, rgba(255, 255, 255, 0.09), transparent 46%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.01));
+  background-size: 52px 52px, 52px 52px, auto, auto;
 }
 
 .mat-surface {
   position: absolute;
-  inset: 6% 7% 8%;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  left: 8%;
+  right: 8%;
+  top: 61%;
+  bottom: 4%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   background:
-    radial-gradient(circle at 50% 52%, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.82) 34%, rgba(210, 210, 210, 0.68) 72%),
-    #e8e8e8;
-  box-shadow:
-    inset 0 0 50px rgba(0, 0, 0, 0.2),
-    0 16px 80px rgba(255, 255, 255, 0.04);
+    radial-gradient(ellipse at center, rgba(255, 255, 255, 0.035), transparent 52%),
+    rgba(255, 255, 255, 0.012);
+  box-shadow: inset 0 0 36px rgba(0, 0, 0, 0.38);
 }
 
 .mat-surface::after {
   position: absolute;
-  inset: 17%;
+  inset: 15%;
   content: "";
-  border: 1px solid rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.075);
   border-radius: 50%;
 }
 
 .mat-centerline {
   position: absolute;
   left: 50%;
-  top: 6%;
-  bottom: 8%;
+  top: 61%;
+  bottom: 4%;
   width: 1px;
-  background: rgba(0, 0, 0, 0.16);
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .room-label {
@@ -392,11 +417,10 @@ textarea {
   left: 18px;
   bottom: 16px;
   z-index: 2;
-  color: #202020;
+  color: #5d5d5d;
   font-size: 11px;
-  font-weight: 720;
+  font-weight: 650;
   letter-spacing: 0.08em;
-  mix-blend-mode: multiply;
 }
 
 .spawn-state {
