@@ -93,18 +93,27 @@
           <span></span>
         </div>
         <div class="mat-room" id="mat-room" aria-hidden="true">
-          <div class="room-wall wall-back" aria-hidden="true"></div>
-          <div class="room-wall wall-left" aria-hidden="true"></div>
-          <div class="room-wall wall-right" aria-hidden="true"></div>
-          <div class="room-ceiling" aria-hidden="true"></div>
+          <div class="room-wall wall-back" aria-hidden="true">
+            <div class="wall-pads"></div>
+            <div class="room-door"></div>
+          </div>
+          <div class="room-wall wall-left" aria-hidden="true">
+            <div class="wall-pads"></div>
+          </div>
+          <div class="room-wall wall-right" aria-hidden="true">
+            <div class="wall-pads"></div>
+          </div>
+          <div class="room-ceiling" aria-hidden="true">
+            <div class="ceiling-lights"></div>
+          </div>
           <div class="room-floor" aria-hidden="true">
             <div class="mat-surface"></div>
             <div class="mat-centerline"></div>
           </div>
           <svg class="room-edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M18 14H82V47H18Z" />
-            <path d="M0 3L18 14M100 3L82 14M0 58L18 47M100 58L82 47" />
-            <path d="M18 47L-10 100M82 47L110 100M18 47H82" />
+            <path d="M33 22H74V40H33Z" />
+            <path d="M0 25L33 22M100 25L74 22M0 56L33 40M100 56L74 40" />
+            <path d="M33 40L-18 100M74 40L118 100M33 40H74" />
           </svg>
           <div class="room-label">MAT SPACE</div>
         </div>

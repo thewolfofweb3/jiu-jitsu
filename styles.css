@@ -285,16 +285,19 @@ textarea {
   z-index: 1;
   display: none;
   overflow: hidden;
-  --room-left: 18%;
-  --room-right: 82%;
-  --room-top: 14%;
-  --room-horizon: 47%;
-  --room-near-left: -10%;
-  --room-near-right: 110%;
-  --grid-line: rgba(255, 255, 255, 0.055);
+  --room-left: 33%;
+  --room-right: 74%;
+  --room-top: 22%;
+  --room-horizon: 40%;
+  --room-near-left: -18%;
+  --room-near-right: 118%;
+  --warm-wall: #8a542b;
+  --warm-wall-dark: #4c2b18;
+  --pad: #9a734f;
+  --mat: #bcb0a8;
   background:
-    radial-gradient(circle at 50% 68%, rgba(255, 255, 255, 0.06), transparent 42%),
-    linear-gradient(#060606, #010101);
+    radial-gradient(ellipse at 50% 63%, rgba(255, 178, 98, 0.22), transparent 52%),
+    linear-gradient(180deg, #130b07 0%, #2d160b 32%, #6f3b1c 41%, #a58879 100%);
 }
 
 .mat-room.is-open {
@@ -311,12 +314,7 @@ textarea {
 .room-wall,
 .room-ceiling,
 .room-floor {
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-color: rgba(255, 255, 255, 0.018);
-  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.1));
+  overflow: hidden;
 }
 
 .wall-back {
@@ -327,47 +325,54 @@ textarea {
     var(--room-right) var(--room-horizon),
     var(--room-left) var(--room-horizon)
   );
-  background-color: rgba(255, 255, 255, 0.014);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 15%, transparent 83%, rgba(0, 0, 0, 0.22)),
+    linear-gradient(180deg, #8b4d20 0 43%, #15100d 43% 46%, #9f7654 46% 100%);
 }
 
 .wall-left {
   z-index: 2;
   clip-path: polygon(
-    0 3%,
+    0 25%,
     var(--room-left) var(--room-top),
     var(--room-left) var(--room-horizon),
-    0 58%
+    0 56%
   );
-  background-size: 43px 43px;
-  background-color: rgba(255, 255, 255, 0.017);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 42%),
+    linear-gradient(180deg, #8f5b32 0 44%, #18120f 44% 47%, #a77c5b 47% 100%);
 }
 
 .wall-right {
   z-index: 2;
   clip-path: polygon(
-    100% 3%,
+    100% 25%,
     var(--room-right) var(--room-top),
     var(--room-right) var(--room-horizon),
-    100% 58%
+    100% 56%
   );
-  background-size: 43px 43px;
-  background-color: rgba(255, 255, 255, 0.017);
+  background:
+    linear-gradient(270deg, rgba(0, 0, 0, 0.2), transparent 44%),
+    linear-gradient(180deg, #8f5b32 0 44%, #18120f 44% 47%, #a77c5b 47% 100%);
 }
 
 .room-ceiling {
   z-index: 1;
   clip-path: polygon(
-    0 0,
-    100% 0,
+    9% 0,
+    91% 0,
     var(--room-right) var(--room-top),
     var(--room-left) var(--room-top)
   );
-  background-size: 56px 56px;
-  background-color: rgba(255, 255, 255, 0.012);
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.34) 0 3px, transparent 3px 13%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.34) 0 3px, transparent 3px 38px),
+    linear-gradient(180deg, #2d160d, #42200e 52%, #1d100a);
+  box-shadow: inset 0 -18px 24px rgba(0, 0, 0, 0.46);
 }
 
 .room-floor {
-  z-index: 1;
+  z-index: 2;
   clip-path: polygon(
     var(--room-left) var(--room-horizon),
     var(--room-right) var(--room-horizon),
@@ -375,46 +380,48 @@ textarea {
     var(--room-near-left) 100%
   );
   background:
-    radial-gradient(ellipse at 50% 76%, rgba(255, 255, 255, 0.065), transparent 48%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.008));
+    repeating-linear-gradient(90deg, transparent 0 128px, rgba(75, 56, 49, 0.2) 128px 129px),
+    repeating-linear-gradient(0deg, transparent 0 112px, rgba(75, 56, 49, 0.15) 112px 113px),
+    radial-gradient(ellipse at 50% 72%, rgba(255, 230, 208, 0.36), transparent 48%),
+    linear-gradient(180deg, #9f7b65 0%, #b8aaa1 54%, #c8c0bc 100%);
   background-size: auto;
 }
 
 .mat-surface {
   position: absolute;
-  left: 7%;
-  right: 7%;
-  top: 55%;
-  bottom: 4%;
+  left: 4%;
+  right: 4%;
+  top: 39.5%;
+  bottom: -5%;
   z-index: 2;
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  clip-path: polygon(34% 0, 73% 0, 104% 100%, -4% 100%);
+  border: 0;
   background:
-    repeating-linear-gradient(90deg, transparent 0 78px, rgba(255, 255, 255, 0.032) 78px 79px),
-    repeating-linear-gradient(0deg, transparent 0 72px, rgba(255, 255, 255, 0.022) 72px 73px),
-    radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1), transparent 48%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018));
+    linear-gradient(90deg, transparent 0 24.8%, rgba(95, 79, 72, 0.22) 24.8% 25%, transparent 25% 49.8%, rgba(95, 79, 72, 0.18) 49.8% 50%, transparent 50% 74.8%, rgba(95, 79, 72, 0.18) 74.8% 75%, transparent 75%),
+    linear-gradient(0deg, transparent 0 34%, rgba(95, 79, 72, 0.14) 34% 34.3%, transparent 34.3% 67%, rgba(95, 79, 72, 0.12) 67% 67.3%, transparent 67.3%),
+    radial-gradient(ellipse at 52% 58%, rgba(255, 235, 222, 0.32), transparent 36%),
+    linear-gradient(180deg, #a07d68 0%, #c0b2aa 55%, #d0cac6 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.035),
-    inset 0 0 46px rgba(0, 0, 0, 0.54),
-    0 22px 80px rgba(0, 0, 0, 0.44);
+    inset 0 0 0 1px rgba(70, 49, 41, 0.12),
+    inset 0 0 70px rgba(80, 49, 34, 0.16);
 }
 
 .mat-surface::before {
   position: absolute;
-  inset: 18px;
+  inset: 9% 6% 5%;
   content: "";
-  border: 1px solid rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(90, 67, 57, 0.16);
   pointer-events: none;
 }
 
 .mat-surface::after {
   position: absolute;
-  left: 18%;
-  right: 18%;
-  top: 19%;
+  left: 22%;
+  right: 22%;
+  top: 41%;
   bottom: 15%;
   content: "";
-  border: 1px solid rgba(255, 255, 255, 0.105);
+  border: 1px solid rgba(85, 64, 56, 0.18);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -422,11 +429,11 @@ textarea {
 .mat-centerline {
   position: absolute;
   left: 50%;
-  top: 55%;
-  bottom: 4%;
+  top: 40%;
+  bottom: 0;
   z-index: 3;
   width: 1px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(83, 64, 57, 0.18);
 }
 
 .room-edges {
@@ -439,14 +446,48 @@ textarea {
 
 .room-edges path {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.12);
-  stroke-width: 0.12;
+  stroke: rgba(24, 15, 11, 0.62);
+  stroke-width: 0.16;
   vector-effect: non-scaling-stroke;
 }
 
 .room-edges path:nth-child(2),
 .room-edges path:nth-child(3) {
-  stroke: rgba(255, 255, 255, 0.095);
+  stroke: rgba(28, 17, 12, 0.48);
+}
+
+.wall-pads {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 47%;
+  bottom: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 9.5%, rgba(59, 39, 29, 0.2) 9.5% 9.8%),
+    linear-gradient(180deg, rgba(255, 209, 162, 0.1), rgba(0, 0, 0, 0.05));
+}
+
+.room-door {
+  position: absolute;
+  right: 4%;
+  bottom: 0;
+  width: 6%;
+  height: 64%;
+  border: 1px solid rgba(20, 13, 11, 0.62);
+  background:
+    linear-gradient(90deg, rgba(255, 205, 150, 0.12), transparent 35%),
+    #151312;
+}
+
+.ceiling-lights {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 18%, rgba(255, 239, 184, 0.86) 18% 20%, transparent 20% 48%, rgba(255, 239, 184, 0.86) 48% 50%, transparent 50% 80%, rgba(255, 239, 184, 0.86) 80% 82%, transparent 82%),
+    radial-gradient(ellipse at 50% 56%, rgba(255, 202, 121, 0.18), transparent 48%);
+  clip-path: inherit;
+  mix-blend-mode: screen;
+  opacity: 0.85;
 }
 
 .room-label {
@@ -464,7 +505,7 @@ textarea {
   position: absolute;
   left: 50%;
   top: 50%;
-  z-index: 3;
+  z-index: 6;
   display: none;
   width: 220px;
   height: 120px;
