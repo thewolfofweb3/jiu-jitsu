@@ -70,27 +70,37 @@
           </div>
 
           <div class="shortcuts">
-            <div class="shortcut-row">
+            <button class="shortcut-row" type="button" data-command="openMat">
               <span>Open mat</span>
               <div class="keys"><kbd>Ctrl</kbd><span>+</span><kbd>M</kbd></div>
-            </div>
-            <div class="shortcut-row">
+            </button>
+            <button class="shortcut-row" type="button" data-command="spawnDummies">
               <span>Spawn dummies</span>
               <div class="keys"><kbd>Ctrl</kbd><span>+</span><kbd>D</kbd></div>
-            </div>
-            <div class="shortcut-row">
+            </button>
+            <button class="shortcut-row" type="button" data-command="shareMove">
               <span>Share move</span>
               <div class="keys"><kbd>Ctrl</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>S</kbd></div>
-            </div>
-            <div class="shortcut-row">
+            </button>
+            <button class="shortcut-row" type="button" data-command="openInbox">
               <span>Open inbox</span>
               <div class="keys"><kbd>Ctrl</kbd><span>+</span><kbd>Shift</kbd><span>+</span><kbd>I</kbd></div>
-            </div>
+            </button>
           </div>
         </div>
         <div class="spawn-state" id="spawn-state" aria-hidden="true">
           <span></span>
           <span></span>
+        </div>
+        <div class="mat-room" id="mat-room" aria-hidden="true">
+          <div class="room-wall wall-back" aria-hidden="true"></div>
+          <div class="room-wall wall-left" aria-hidden="true"></div>
+          <div class="room-wall wall-right" aria-hidden="true"></div>
+          <div class="room-floor" aria-hidden="true">
+            <div class="mat-surface"></div>
+            <div class="mat-centerline"></div>
+          </div>
+          <div class="room-label">MAT SPACE</div>
         </div>
       </section>
 

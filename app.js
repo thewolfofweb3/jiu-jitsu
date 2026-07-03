@@ -3,7 +3,9 @@ const promptInput = document.querySelector("#prompt");
 const messages = document.querySelector("#messages");
 const matPanel = document.querySelector(".mat-panel");
 const centerEmpty = document.querySelector(".center-empty");
+const shortcutList = document.querySelector(".shortcuts");
 const spawnState = document.querySelector("#spawn-state");
+const matRoom = document.querySelector("#mat-room");
 const attachToggle = document.querySelector("#attach-toggle");
 const attachMenu = document.querySelector("#attach-menu");
 const voiceToggle = document.querySelector("#voice-toggle");
@@ -111,6 +113,26 @@ drawerTabs.addEventListener("click", (event) => {
   `;
 });
 
+shortcutList.addEventListener("click", (event) => {
+  const command = event.target.closest("[data-command]")?.dataset.command;
+
+  if (command === "openMat") {
+    openMat();
+  }
+
+  if (command === "spawnDummies") {
+    spawnDummies();
+  }
+
+  if (command === "shareMove") {
+    toggleSharePopover(true);
+  }
+
+  if (command === "openInbox") {
+    toggleDrawer(true);
+  }
+});
+
 sendMove.addEventListener("click", () => {
   const recipient = shareRecipient.value.trim();
 
@@ -181,6 +203,8 @@ function matchesShortcut(event, shortcut) {
 function openMat() {
   matPanel.classList.add("is-open");
   centerEmpty.classList.add("is-muted");
+  matRoom.classList.add("is-open");
+  matRoom.setAttribute("aria-hidden", "false");
 }
 
 function spawnDummies() {
