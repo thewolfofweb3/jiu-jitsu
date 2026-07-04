@@ -259,14 +259,14 @@ async function setupThreeRoom() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.04;
+    renderer.toneMappingExposure = 1.42;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     threeRoom.append(renderer.domElement);
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050505);
+    scene.background = new THREE.Color(0x070707);
 
     const camera = new THREE.PerspectiveCamera(49, 1, 0.01, 200);
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -276,16 +276,17 @@ async function setupThreeRoom() {
     controls.maxDistance = 7;
     controls.target.set(0, 1.35, 2.2);
 
-    scene.add(new THREE.HemisphereLight(0xded7cf, 0x171717, 1.35));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    scene.add(new THREE.HemisphereLight(0xf3eee7, 0x1b1b1b, 2.25));
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.15);
-    keyLight.position.set(0.2, 5.5, -1.2);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.15);
+    keyLight.position.set(-2.8, 5.8, 2.4);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.set(1024, 1024);
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xc8d5ff, 0.42);
-    fillLight.position.set(-3, 2.4, -3);
+    const fillLight = new THREE.DirectionalLight(0xdce8ff, 1.05);
+    fillLight.position.set(3.5, 2.8, -3.2);
     scene.add(fillLight);
 
     threeStage.camera = camera;
@@ -357,8 +358,9 @@ function prepareDojoModel(THREE, model, renderer) {
         return;
       }
 
-      material.roughness = Math.max(material.roughness ?? 0.75, 0.62);
+      material.roughness = Math.max(material.roughness ?? 0.75, 0.56);
       material.metalness = Math.min(material.metalness ?? 0.05, 0.18);
+      material.envMapIntensity = Math.max(material.envMapIntensity ?? 0, 0.7);
 
       [material.map, material.normalMap, material.roughnessMap, material.aoMap].forEach((texture) => {
         if (!texture) {
@@ -383,27 +385,28 @@ function frameDojoCamera(THREE, model, camera, controls) {
   const roomWidth = Math.max(size.x, 1);
   const roomDepth = Math.max(size.z, 1);
   const roomHeight = Math.max(size.y, 1);
+  const viewSpan = Math.max(roomWidth, roomDepth);
 
   camera.near = 0.01;
-  camera.far = Math.max(roomDepth * 6, 80);
+  camera.far = Math.max(viewSpan * 6, 80);
   camera.position.set(
-    center.x,
-    center.y + roomHeight * 0.28,
-    center.z - roomDepth * 0.31,
+    center.x - roomWidth * 0.33,
+    center.y + roomHeight * 0.3,
+    center.z - roomDepth * 0.03,
   );
 
   controls.target.set(
-    center.x,
+    center.x + roomWidth * 0.28,
     center.y + roomHeight * 0.24,
-    center.z + roomDepth * 0.22,
+    center.z + roomDepth * 0.03,
   );
 
-  camera.fov = 54;
+  camera.fov = 58;
   camera.updateProjectionMatrix();
   controls.update();
 
-  controls.minDistance = roomWidth * 0.05;
-  controls.maxDistance = roomWidth * 0.8;
+  controls.minDistance = viewSpan * 0.04;
+  controls.maxDistance = viewSpan * 0.7;
 }
 
 function animateThreeRoom() {
