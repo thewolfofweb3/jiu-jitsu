@@ -276,7 +276,7 @@ async function setupThreeRoom() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.42;
+    renderer.toneMappingExposure = 1.56;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -287,22 +287,27 @@ async function setupThreeRoom() {
     renderer.domElement.style.pointerEvents = "auto";
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x070707);
+    scene.background = new THREE.Color(0x060606);
+    scene.fog = new THREE.Fog(0x060606, 5.8, 11.5);
 
     const camera = new THREE.PerspectiveCamera(49, 1, 0.01, 200);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-    scene.add(new THREE.HemisphereLight(0xf3eee7, 0x1b1b1b, 2.25));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.82));
+    scene.add(new THREE.HemisphereLight(0xf6f1ea, 0x242424, 2.55));
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.15);
-    keyLight.position.set(-2.8, 5.8, 2.4);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.58);
+    keyLight.position.set(-2.6, 5.6, 2.7);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.set(1024, 1024);
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xdce8ff, 1.05);
-    fillLight.position.set(3.5, 2.8, -3.2);
+    const fillLight = new THREE.DirectionalLight(0xe8efff, 1.34);
+    fillLight.position.set(3.8, 3.2, -3.1);
     scene.add(fillLight);
+
+    const matLift = new THREE.DirectionalLight(0xfff5ea, 0.42);
+    matLift.position.set(0.4, 2.1, 3.8);
+    scene.add(matLift);
 
     threeStage.camera = camera;
     threeStage.renderer = renderer;
@@ -376,13 +381,21 @@ function prepareDojoModel(THREE, model, renderer) {
         return;
       }
 
-      material.roughness = Math.max(material.roughness ?? 0.75, 0.56);
-      material.metalness = Math.min(material.metalness ?? 0.05, 0.18);
-      material.envMapIntensity = Math.max(material.envMapIntensity ?? 0, 0.7);
+      material.roughness = Math.max(material.roughness ?? 0.75, 0.74);
+      material.metalness = Math.min(material.metalness ?? 0.05, 0.11);
+      material.envMapIntensity = Math.min(Math.max(material.envMapIntensity ?? 0, 0.35), 0.48);
 
-      [material.map, material.normalMap, material.roughnessMap, material.aoMap].forEach((texture) => {
+      if (material.normalScale) {
+        material.normalScale.multiplyScalar(0.42);
+      }
+
+      [material.map, material.normalMap, material.roughnessMap, material.aoMap, material.metalnessMap].forEach((texture) => {
         if (!texture) {
           return;
+        }
+
+        if (texture === material.map) {
+          texture.colorSpace = THREE.SRGBColorSpace;
         }
 
         texture.anisotropy = maxAnisotropy;
@@ -391,6 +404,8 @@ function prepareDojoModel(THREE, model, renderer) {
         texture.magFilter = THREE.LinearFilter;
         texture.needsUpdate = true;
       });
+
+      material.needsUpdate = true;
     });
   });
 }
