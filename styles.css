@@ -285,220 +285,53 @@ textarea {
   z-index: 1;
   display: none;
   overflow: hidden;
-  --room-left: 33%;
-  --room-right: 74%;
-  --room-top: 22%;
-  --room-horizon: 40%;
-  --room-near-left: -18%;
-  --room-near-right: 118%;
-  --warm-wall: #8a542b;
-  --warm-wall-dark: #4c2b18;
-  --pad: #9a734f;
-  --mat: #bcb0a8;
   background:
-    radial-gradient(ellipse at 50% 63%, rgba(255, 178, 98, 0.22), transparent 52%),
-    linear-gradient(180deg, #130b07 0%, #2d160b 32%, #6f3b1c 41%, #a58879 100%);
+    radial-gradient(ellipse at 50% 62%, rgba(255, 255, 255, 0.055), transparent 44%),
+    #020202;
 }
 
 .mat-room.is-open {
   display: block;
 }
 
-.room-wall,
-.room-ceiling,
-.room-floor {
+.three-room {
   position: absolute;
   inset: 0;
-}
-
-.room-wall,
-.room-ceiling,
-.room-floor {
-  overflow: hidden;
-}
-
-.wall-back {
-  z-index: 2;
-  clip-path: polygon(
-    var(--room-left) var(--room-top),
-    var(--room-right) var(--room-top),
-    var(--room-right) var(--room-horizon),
-    var(--room-left) var(--room-horizon)
-  );
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 15%, transparent 83%, rgba(0, 0, 0, 0.22)),
-    linear-gradient(180deg, #8b4d20 0 43%, #15100d 43% 46%, #9f7654 46% 100%);
-}
-
-.wall-left {
-  z-index: 2;
-  clip-path: polygon(
-    0 25%,
-    var(--room-left) var(--room-top),
-    var(--room-left) var(--room-horizon),
-    0 56%
-  );
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 42%),
-    linear-gradient(180deg, #8f5b32 0 44%, #18120f 44% 47%, #a77c5b 47% 100%);
-}
-
-.wall-right {
-  z-index: 2;
-  clip-path: polygon(
-    100% 25%,
-    var(--room-right) var(--room-top),
-    var(--room-right) var(--room-horizon),
-    100% 56%
-  );
-  background:
-    linear-gradient(270deg, rgba(0, 0, 0, 0.2), transparent 44%),
-    linear-gradient(180deg, #8f5b32 0 44%, #18120f 44% 47%, #a77c5b 47% 100%);
-}
-
-.room-ceiling {
   z-index: 1;
-  clip-path: polygon(
-    9% 0,
-    91% 0,
-    var(--room-right) var(--room-top),
-    var(--room-left) var(--room-top)
-  );
-  background:
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.34) 0 3px, transparent 3px 13%),
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.34) 0 3px, transparent 3px 38px),
-    linear-gradient(180deg, #2d160d, #42200e 52%, #1d100a);
-  box-shadow: inset 0 -18px 24px rgba(0, 0, 0, 0.46);
 }
 
-.room-floor {
+.three-room canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.three-status {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
   z-index: 2;
-  clip-path: polygon(
-    var(--room-left) var(--room-horizon),
-    var(--room-right) var(--room-horizon),
-    var(--room-near-right) 100%,
-    var(--room-near-left) 100%
-  );
-  background:
-    repeating-linear-gradient(90deg, transparent 0 128px, rgba(75, 56, 49, 0.2) 128px 129px),
-    repeating-linear-gradient(0deg, transparent 0 112px, rgba(75, 56, 49, 0.15) 112px 113px),
-    radial-gradient(ellipse at 50% 72%, rgba(255, 230, 208, 0.36), transparent 48%),
-    linear-gradient(180deg, #9f7b65 0%, #b8aaa1 54%, #c8c0bc 100%);
-  background-size: auto;
-}
-
-.mat-surface {
-  position: absolute;
-  left: 4%;
-  right: 4%;
-  top: 39.5%;
-  bottom: -5%;
-  z-index: 2;
-  clip-path: polygon(34% 0, 73% 0, 104% 100%, -4% 100%);
-  border: 0;
-  background:
-    linear-gradient(90deg, transparent 0 24.8%, rgba(95, 79, 72, 0.22) 24.8% 25%, transparent 25% 49.8%, rgba(95, 79, 72, 0.18) 49.8% 50%, transparent 50% 74.8%, rgba(95, 79, 72, 0.18) 74.8% 75%, transparent 75%),
-    linear-gradient(0deg, transparent 0 34%, rgba(95, 79, 72, 0.14) 34% 34.3%, transparent 34.3% 67%, rgba(95, 79, 72, 0.12) 67% 67.3%, transparent 67.3%),
-    radial-gradient(ellipse at 52% 58%, rgba(255, 235, 222, 0.32), transparent 36%),
-    linear-gradient(180deg, #a07d68 0%, #c0b2aa 55%, #d0cac6 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(70, 49, 41, 0.12),
-    inset 0 0 70px rgba(80, 49, 34, 0.16);
-}
-
-.mat-surface::before {
-  position: absolute;
-  inset: 9% 6% 5%;
-  content: "";
-  border: 1px solid rgba(90, 67, 57, 0.16);
-  pointer-events: none;
-}
-
-.mat-surface::after {
-  position: absolute;
-  left: 22%;
-  right: 22%;
-  top: 41%;
-  bottom: 15%;
-  content: "";
-  border: 1px solid rgba(85, 64, 56, 0.18);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.mat-centerline {
-  position: absolute;
-  left: 50%;
-  top: 40%;
-  bottom: 0;
-  z-index: 3;
-  width: 1px;
-  background: rgba(83, 64, 57, 0.18);
-}
-
-.room-edges {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.room-edges path {
-  fill: none;
-  stroke: rgba(24, 15, 11, 0.62);
-  stroke-width: 0.16;
-  vector-effect: non-scaling-stroke;
-}
-
-.room-edges path:nth-child(2),
-.room-edges path:nth-child(3) {
-  stroke: rgba(28, 17, 12, 0.48);
-}
-
-.wall-pads {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 47%;
-  bottom: 0;
-  background:
-    repeating-linear-gradient(90deg, transparent 0 9.5%, rgba(59, 39, 29, 0.2) 9.5% 9.8%),
-    linear-gradient(180deg, rgba(255, 209, 162, 0.1), rgba(0, 0, 0, 0.05));
-}
-
-.room-door {
-  position: absolute;
-  right: 4%;
-  bottom: 0;
-  width: 6%;
-  height: 64%;
-  border: 1px solid rgba(20, 13, 11, 0.62);
-  background:
-    linear-gradient(90deg, rgba(255, 205, 150, 0.12), transparent 35%),
-    #151312;
-}
-
-.ceiling-lights {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, transparent 18%, rgba(255, 239, 184, 0.86) 18% 20%, transparent 20% 48%, rgba(255, 239, 184, 0.86) 48% 50%, transparent 50% 80%, rgba(255, 239, 184, 0.86) 80% 82%, transparent 82%),
-    radial-gradient(ellipse at 50% 56%, rgba(255, 202, 121, 0.18), transparent 48%);
-  clip-path: inherit;
-  mix-blend-mode: screen;
-  opacity: 0.85;
-}
-
-.room-label {
-  position: absolute;
-  left: 18px;
-  bottom: 16px;
-  z-index: 5;
-  color: #5d5d5d;
+  max-width: min(360px, calc(100% - 32px));
+  margin: 0;
+  color: #707070;
   font-size: 11px;
-  font-weight: 650;
+  font-weight: 560;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.three-status.is-error {
+  color: #9b7a7a;
+}
+
+.three-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.38), transparent 16%, transparent 84%, rgba(0, 0, 0, 0.38)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.26), transparent 20%, transparent 78%, rgba(0, 0, 0, 0.2));
+  pointer-events: none;
 }
 
 .spawn-state {

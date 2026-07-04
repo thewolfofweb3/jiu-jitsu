@@ -6,6 +6,8 @@ const centerEmpty = document.querySelector(".center-empty");
 const shortcutList = document.querySelector(".shortcuts");
 const spawnState = document.querySelector("#spawn-state");
 const matRoom = document.querySelector("#mat-room");
+const threeRoom = document.querySelector("#three-room");
+const threeStatus = document.querySelector("#three-status");
 const attachToggle = document.querySelector("#attach-toggle");
 const attachMenu = document.querySelector("#attach-menu");
 const voiceToggle = document.querySelector("#voice-toggle");
@@ -21,6 +23,18 @@ const drawerTabs = document.querySelector(".drawer-tabs");
 const drawerContent = document.querySelector("#drawer-content");
 const ANALYSIS_DELAY_RANGE = [1600, 2400];
 const NORMAL_DELAY_RANGE = [900, 1400];
+const DOJO_MODEL_URL = "assets/dojo-room.glb";
+const THREE_VERSION = "0.166.1";
+
+const threeStage = {
+  animationId: null,
+  camera: null,
+  controls: null,
+  initialized: false,
+  loadingPromise: null,
+  renderer: null,
+  scene: null,
+};
 
 const shortcuts = {
   openMat: { ctrlKey: true, key: "m" },
@@ -205,12 +219,224 @@ function openMat() {
   centerEmpty.classList.add("is-muted");
   matRoom.classList.add("is-open");
   matRoom.setAttribute("aria-hidden", "false");
+  initThreeRoom();
 }
 
 function spawnDummies() {
   openMat();
   spawnState.classList.add("is-active");
   spawnState.setAttribute("aria-hidden", "false");
+}
+
+function initThreeRoom() {
+  if (threeStage.initialized || threeStage.loadingPromise) {
+    resizeThreeRoom();
+    return;
+  }
+
+  threeStatus.textContent = `Loading ${DOJO_MODEL_URL}`;
+  threeStatus.classList.remove("is-error");
+  threeStage.loadingPromise = setupThreeRoom();
+}
+
+async function setupThreeRoom() {
+  try {
+    const [
+      THREE,
+      { GLTFLoader },
+      { OrbitControls },
+    ] = await Promise.all([
+      import(`https://esm.sh/three@${THREE_VERSION}`),
+      import(`https://esm.sh/three@${THREE_VERSION}/examples/jsm/loaders/GLTFLoader.js`),
+      import(`https://esm.sh/three@${THREE_VERSION}/examples/jsm/controls/OrbitControls.js`),
+    ]);
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: false,
+      powerPreference: "high-performance",
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.04;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    threeRoom.append(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050505);
+
+    const camera = new THREE.PerspectiveCamera(49, 1, 0.01, 200);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.enablePan = false;
+    controls.minDistance = 0.45;
+    controls.maxDistance = 7;
+    controls.target.set(0, 1.35, 2.2);
+
+    scene.add(new THREE.HemisphereLight(0xded7cf, 0x171717, 1.35));
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.15);
+    keyLight.position.set(0.2, 5.5, -1.2);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.set(1024, 1024);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0xc8d5ff, 0.42);
+    fillLight.position.set(-3, 2.4, -3);
+    scene.add(fillLight);
+
+    threeStage.camera = camera;
+    threeStage.controls = controls;
+    threeStage.renderer = renderer;
+    threeStage.scene = scene;
+    threeStage.initialized = true;
+
+    resizeThreeRoom();
+    await loadDojoModel({ THREE, GLTFLoader, scene, camera, controls, renderer });
+    animateThreeRoom();
+    window.addEventListener("resize", resizeThreeRoom);
+  } catch (error) {
+    showThreeError("3D room failed to load. Add assets/dojo-room.glb and refresh.");
+    console.error(error);
+  }
+}
+
+function loadDojoModel({ THREE, GLTFLoader, scene, camera, controls, renderer }) {
+  return new Promise((resolve, reject) => {
+    const loader = new GLTFLoader();
+
+    loader.load(
+      DOJO_MODEL_URL,
+      (gltf) => {
+        const model = gltf.scene;
+        prepareDojoModel(THREE, model, renderer);
+        scene.add(model);
+        frameDojoCamera(THREE, model, camera, controls);
+        threeStatus.textContent = "";
+        resolve(model);
+      },
+      (event) => {
+        if (event.total > 0) {
+          const percent = Math.round((event.loaded / event.total) * 100);
+          threeStatus.textContent = `Loading dojo ${percent}%`;
+        }
+      },
+      reject,
+    );
+  });
+}
+
+function prepareDojoModel(THREE, model, renderer) {
+  const bounds = new THREE.Box3().setFromObject(model);
+  const size = bounds.getSize(new THREE.Vector3());
+  const center = bounds.getCenter(new THREE.Vector3());
+  const maxAxis = Math.max(size.x, size.y, size.z) || 1;
+  const scale = 8 / maxAxis;
+
+  model.position.sub(center);
+  model.scale.setScalar(scale);
+  model.updateMatrixWorld(true);
+
+  const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+
+  model.traverse((object) => {
+    if (!object.isMesh) {
+      return;
+    }
+
+    object.castShadow = true;
+    object.receiveShadow = true;
+    object.frustumCulled = false;
+
+    const materials = Array.isArray(object.material) ? object.material : [object.material];
+    materials.forEach((material) => {
+      if (!material) {
+        return;
+      }
+
+      material.roughness = Math.max(material.roughness ?? 0.75, 0.62);
+      material.metalness = Math.min(material.metalness ?? 0.05, 0.18);
+
+      [material.map, material.normalMap, material.roughnessMap, material.aoMap].forEach((texture) => {
+        if (!texture) {
+          return;
+        }
+
+        texture.anisotropy = maxAnisotropy;
+        texture.generateMipmaps = true;
+        texture.minFilter = THREE.LinearMipmapLinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.needsUpdate = true;
+      });
+    });
+  });
+}
+
+function frameDojoCamera(THREE, model, camera, controls) {
+  const bounds = new THREE.Box3().setFromObject(model);
+  const size = bounds.getSize(new THREE.Vector3());
+  const center = bounds.getCenter(new THREE.Vector3());
+
+  const roomWidth = Math.max(size.x, 1);
+  const roomDepth = Math.max(size.z, 1);
+  const roomHeight = Math.max(size.y, 1);
+
+  camera.near = 0.01;
+  camera.far = Math.max(roomDepth * 6, 80);
+  camera.position.set(
+    center.x,
+    center.y + roomHeight * 0.28,
+    center.z - roomDepth * 0.31,
+  );
+
+  controls.target.set(
+    center.x,
+    center.y + roomHeight * 0.24,
+    center.z + roomDepth * 0.22,
+  );
+
+  camera.fov = 54;
+  camera.updateProjectionMatrix();
+  controls.update();
+
+  controls.minDistance = roomWidth * 0.05;
+  controls.maxDistance = roomWidth * 0.8;
+}
+
+function animateThreeRoom() {
+  const { controls, renderer, scene, camera } = threeStage;
+
+  if (!renderer || !scene || !camera) {
+    return;
+  }
+
+  controls?.update();
+  renderer.render(scene, camera);
+  threeStage.animationId = window.requestAnimationFrame(animateThreeRoom);
+}
+
+function resizeThreeRoom() {
+  const { camera, renderer } = threeStage;
+
+  if (!camera || !renderer) {
+    return;
+  }
+
+  const rect = threeRoom.getBoundingClientRect();
+  const width = Math.max(1, Math.floor(rect.width));
+  const height = Math.max(1, Math.floor(rect.height));
+
+  renderer.setSize(width, height, false);
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+}
+
+function showThreeError(message) {
+  threeStatus.textContent = message;
+  threeStatus.classList.add("is-error");
 }
 
 function toggleSharePopover(forceOpen) {
