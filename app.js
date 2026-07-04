@@ -25,6 +25,7 @@ const ANALYSIS_DELAY_RANGE = [1600, 2400];
 const NORMAL_DELAY_RANGE = [900, 1400];
 const DOJO_MODEL_URL = "assets/dojo-room.glb";
 const THREE_VERSION = "0.166.1";
+const LOAD_DISPLAY_MINIMUM_MS = 650;
 
 const threeStage = {
   animationId: null,
@@ -206,6 +207,10 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+window.addEventListener("load", () => {
+  window.setTimeout(initThreeRoom, 700);
+});
+
 function matchesShortcut(event, shortcut) {
   return event.key.toLowerCase() === shortcut.key
     && Boolean(event.ctrlKey || event.metaKey) === Boolean(shortcut.ctrlKey)
@@ -240,6 +245,7 @@ function initThreeRoom() {
 
 async function setupThreeRoom() {
   try {
+    const startedAt = performance.now();
     const [
       THREE,
       { GLTFLoader },
@@ -289,6 +295,10 @@ async function setupThreeRoom() {
 
     resizeThreeRoom();
     await loadDojoModel({ THREE, GLTFLoader, scene, camera, renderer });
+    threeStatus.textContent = "Loading dojo 100%";
+    const elapsed = performance.now() - startedAt;
+    await wait(Math.max(0, LOAD_DISPLAY_MINIMUM_MS - elapsed));
+    threeStatus.textContent = "";
     animateThreeRoom();
     window.addEventListener("resize", resizeThreeRoom);
   } catch (error) {
@@ -308,12 +318,12 @@ function loadDojoModel({ THREE, GLTFLoader, scene, camera, renderer }) {
         prepareDojoModel(THREE, model, renderer);
         scene.add(model);
         frameDojoCamera(THREE, model, camera);
-        threeStatus.textContent = "";
         resolve(model);
       },
       (event) => {
         if (event.total > 0) {
-          const percent = Math.round((event.loaded / event.total) * 100);
+          const actualPercent = Math.round((event.loaded / event.total) * 100);
+          const percent = Math.min(99, Math.max(actualPercent, Math.round(actualPercent * 1.18)));
           threeStatus.textContent = `Loading dojo ${percent}%`;
         }
       },
@@ -382,13 +392,13 @@ function frameDojoCamera(THREE, model, camera) {
   camera.near = 0.01;
   camera.far = Math.max(viewSpan * 6, 80);
   camera.position.set(
-    center.x - roomWidth * 0.42,
+    center.x + roomWidth * 0.42,
     center.y + roomHeight * 0.18,
     center.z - roomDepth * 0.02,
   );
 
   camera.lookAt(
-    center.x + roomWidth * 0.28,
+    center.x - roomWidth * 0.28,
     center.y + roomHeight * 0.16,
     center.z + roomDepth * 0.03,
   );
