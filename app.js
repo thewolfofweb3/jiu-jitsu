@@ -393,17 +393,17 @@ function frameDojoCamera(THREE, model, camera) {
   camera.far = Math.max(viewSpan * 6, 80);
   camera.position.set(
     center.x + roomWidth * 0.27,
-    center.y + roomHeight * 0.155,
+    center.y + roomHeight * 0.105,
     center.z,
   );
 
   camera.lookAt(
     center.x - roomWidth * 0.36,
-    center.y + roomHeight * 0.195,
+    center.y + roomHeight * 0.095,
     center.z,
   );
 
-  camera.fov = 48;
+  camera.fov = 47;
   camera.updateProjectionMatrix();
 }
 
