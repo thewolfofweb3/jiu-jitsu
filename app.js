@@ -29,7 +29,6 @@ const THREE_VERSION = "0.166.1";
 const threeStage = {
   animationId: null,
   camera: null,
-  controls: null,
   initialized: false,
   loadingPromise: null,
   renderer: null,
@@ -244,11 +243,9 @@ async function setupThreeRoom() {
     const [
       THREE,
       { GLTFLoader },
-      { OrbitControls },
     ] = await Promise.all([
       import(`https://esm.sh/three@${THREE_VERSION}`),
       import(`https://esm.sh/three@${THREE_VERSION}/examples/jsm/loaders/GLTFLoader.js`),
-      import(`https://esm.sh/three@${THREE_VERSION}/examples/jsm/controls/OrbitControls.js`),
     ]);
 
     const renderer = new THREE.WebGLRenderer({
@@ -264,17 +261,13 @@ async function setupThreeRoom() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     threeRoom.append(renderer.domElement);
+    renderer.domElement.setAttribute("aria-hidden", "true");
+    renderer.domElement.style.pointerEvents = "none";
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x070707);
 
     const camera = new THREE.PerspectiveCamera(49, 1, 0.01, 200);
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.enablePan = false;
-    controls.minDistance = 0.45;
-    controls.maxDistance = 7;
-    controls.target.set(0, 1.35, 2.2);
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.55));
     scene.add(new THREE.HemisphereLight(0xf3eee7, 0x1b1b1b, 2.25));
@@ -290,13 +283,12 @@ async function setupThreeRoom() {
     scene.add(fillLight);
 
     threeStage.camera = camera;
-    threeStage.controls = controls;
     threeStage.renderer = renderer;
     threeStage.scene = scene;
     threeStage.initialized = true;
 
     resizeThreeRoom();
-    await loadDojoModel({ THREE, GLTFLoader, scene, camera, controls, renderer });
+    await loadDojoModel({ THREE, GLTFLoader, scene, camera, renderer });
     animateThreeRoom();
     window.addEventListener("resize", resizeThreeRoom);
   } catch (error) {
@@ -305,7 +297,7 @@ async function setupThreeRoom() {
   }
 }
 
-function loadDojoModel({ THREE, GLTFLoader, scene, camera, controls, renderer }) {
+function loadDojoModel({ THREE, GLTFLoader, scene, camera, renderer }) {
   return new Promise((resolve, reject) => {
     const loader = new GLTFLoader();
 
@@ -315,7 +307,7 @@ function loadDojoModel({ THREE, GLTFLoader, scene, camera, controls, renderer })
         const model = gltf.scene;
         prepareDojoModel(THREE, model, renderer);
         scene.add(model);
-        frameDojoCamera(THREE, model, camera, controls);
+        frameDojoCamera(THREE, model, camera);
         threeStatus.textContent = "";
         resolve(model);
       },
@@ -377,7 +369,7 @@ function prepareDojoModel(THREE, model, renderer) {
   });
 }
 
-function frameDojoCamera(THREE, model, camera, controls) {
+function frameDojoCamera(THREE, model, camera) {
   const bounds = new THREE.Box3().setFromObject(model);
   const size = bounds.getSize(new THREE.Vector3());
   const center = bounds.getCenter(new THREE.Vector3());
@@ -390,33 +382,28 @@ function frameDojoCamera(THREE, model, camera, controls) {
   camera.near = 0.01;
   camera.far = Math.max(viewSpan * 6, 80);
   camera.position.set(
-    center.x - roomWidth * 0.33,
-    center.y + roomHeight * 0.3,
-    center.z - roomDepth * 0.03,
+    center.x - roomWidth * 0.42,
+    center.y + roomHeight * 0.18,
+    center.z - roomDepth * 0.02,
   );
 
-  controls.target.set(
+  camera.lookAt(
     center.x + roomWidth * 0.28,
-    center.y + roomHeight * 0.24,
+    center.y + roomHeight * 0.16,
     center.z + roomDepth * 0.03,
   );
 
-  camera.fov = 58;
+  camera.fov = 61;
   camera.updateProjectionMatrix();
-  controls.update();
-
-  controls.minDistance = viewSpan * 0.04;
-  controls.maxDistance = viewSpan * 0.7;
 }
 
 function animateThreeRoom() {
-  const { controls, renderer, scene, camera } = threeStage;
+  const { renderer, scene, camera } = threeStage;
 
   if (!renderer || !scene || !camera) {
     return;
   }
 
-  controls?.update();
   renderer.render(scene, camera);
   threeStage.animationId = window.requestAnimationFrame(animateThreeRoom);
 }
