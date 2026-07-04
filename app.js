@@ -30,11 +30,14 @@ const LOAD_DISPLAY_MINIMUM_MS = 650;
 const threeStage = {
   animationId: null,
   camera: null,
+  controls: null,
   initialized: false,
   loadingPromise: null,
   renderer: null,
   scene: null,
 };
+
+const moveKeys = new Set(["w", "a", "s", "d", "arrowup", "arrowdown", "arrowleft", "arrowright"]);
 
 const shortcuts = {
   openMat: { ctrlKey: true, key: "m" },
@@ -182,6 +185,7 @@ document.addEventListener("click", (event) => {
 document.addEventListener("keydown", (event) => {
   const target = event.target;
   const inTypingField = target.closest("input, textarea");
+  const key = event.key.toLowerCase();
 
   if (matchesShortcut(event, shortcuts.openMat)) {
     event.preventDefault();
@@ -204,7 +208,17 @@ document.addEventListener("keydown", (event) => {
   if (matchesShortcut(event, shortcuts.openInbox)) {
     event.preventDefault();
     toggleDrawer(true);
+    return;
   }
+
+  if (!inTypingField && threeStage.controls && moveKeys.has(key)) {
+    event.preventDefault();
+    threeStage.controls.keys.add(key);
+  }
+});
+
+document.addEventListener("keyup", (event) => {
+  threeStage.controls?.keys.delete(event.key.toLowerCase());
 });
 
 window.addEventListener("load", () => {
@@ -267,8 +281,10 @@ async function setupThreeRoom() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     threeRoom.append(renderer.domElement);
-    renderer.domElement.setAttribute("aria-hidden", "true");
-    renderer.domElement.style.pointerEvents = "none";
+    renderer.domElement.setAttribute("aria-label", "Interactive dojo room. Drag to look. Use W A S D or arrow keys to move.");
+    renderer.domElement.setAttribute("role", "application");
+    renderer.domElement.setAttribute("tabindex", "0");
+    renderer.domElement.style.pointerEvents = "auto";
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x070707);
@@ -317,7 +333,7 @@ function loadDojoModel({ THREE, GLTFLoader, scene, camera, renderer }) {
         const model = gltf.scene;
         prepareDojoModel(THREE, model, renderer);
         scene.add(model);
-        frameDojoCamera(THREE, model, camera);
+        threeStage.controls = createDojoControls(THREE, model, camera, renderer.domElement);
         resolve(model);
       },
       (event) => {
@@ -393,13 +409,13 @@ function frameDojoCamera(THREE, model, camera) {
   camera.far = Math.max(viewSpan * 6, 80);
   camera.position.set(
     center.x + roomWidth * 0.27,
-    center.y + roomHeight * 0.105,
+    center.y + roomHeight * 0.085,
     center.z,
   );
 
   camera.lookAt(
     center.x - roomWidth * 0.36,
-    center.y + roomHeight * 0.095,
+    center.y + roomHeight * 0.045,
     center.z,
   );
 
@@ -407,11 +423,141 @@ function frameDojoCamera(THREE, model, camera) {
   camera.updateProjectionMatrix();
 }
 
+function createDojoControls(THREE, model, camera, canvas) {
+  const bounds = new THREE.Box3().setFromObject(model);
+  const size = bounds.getSize(new THREE.Vector3());
+  const center = bounds.getCenter(new THREE.Vector3());
+  const roomWidth = Math.max(size.x, 1);
+  const roomDepth = Math.max(size.z, 1);
+  const roomHeight = Math.max(size.y, 1);
+  const baseYaw = Math.PI;
+  const controls = {
+    baseYaw,
+    bounds: {
+      minX: center.x - roomWidth * 0.38,
+      maxX: center.x + roomWidth * 0.32,
+      minZ: center.z - roomDepth * 0.29,
+      maxZ: center.z + roomDepth * 0.29,
+    },
+    cameraHeight: center.y + roomHeight * 0.082,
+    dragging: false,
+    keys: new Set(),
+    lastFrame: performance.now(),
+    pitch: -0.06,
+    pointerX: 0,
+    pointerY: 0,
+    speed: Math.max(roomWidth, roomDepth) * 0.32,
+    Vector3: THREE.Vector3,
+    yaw: baseYaw,
+  };
+
+  camera.near = 0.01;
+  camera.far = Math.max(Math.max(roomWidth, roomDepth) * 6, 80);
+  camera.fov = 47;
+  camera.position.set(center.x + roomWidth * 0.24, controls.cameraHeight, center.z);
+  camera.updateProjectionMatrix();
+  applyDojoCamera(camera, controls);
+
+  canvas.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) {
+      return;
+    }
+
+    controls.dragging = true;
+    controls.pointerX = event.clientX;
+    controls.pointerY = event.clientY;
+    canvas.classList.add("is-dragging");
+    canvas.focus();
+    canvas.setPointerCapture(event.pointerId);
+  });
+
+  canvas.addEventListener("pointermove", (event) => {
+    if (!controls.dragging) {
+      return;
+    }
+
+    const dx = event.clientX - controls.pointerX;
+    const dy = event.clientY - controls.pointerY;
+    controls.pointerX = event.clientX;
+    controls.pointerY = event.clientY;
+    controls.yaw = clamp(controls.yaw - dx * 0.003, controls.baseYaw - 0.58, controls.baseYaw + 0.58);
+    controls.pitch = clamp(controls.pitch - dy * 0.0024, -0.26, 0.11);
+    applyDojoCamera(camera, controls);
+  });
+
+  canvas.addEventListener("pointerup", (event) => {
+    controls.dragging = false;
+    canvas.classList.remove("is-dragging");
+    canvas.releasePointerCapture(event.pointerId);
+  });
+
+  canvas.addEventListener("pointercancel", () => {
+    controls.dragging = false;
+    canvas.classList.remove("is-dragging");
+  });
+
+  return controls;
+}
+
+function updateDojoControls(camera, controls) {
+  const now = performance.now();
+  const delta = Math.min((now - controls.lastFrame) / 1000, 0.05);
+  controls.lastFrame = now;
+
+  if (!controls.keys.size) {
+    return;
+  }
+
+  const forward = new controls.Vector3(Math.cos(controls.yaw), 0, Math.sin(controls.yaw)).normalize();
+  const right = new controls.Vector3(-forward.z, 0, forward.x).normalize();
+  const movement = new controls.Vector3();
+
+  if (controls.keys.has("w") || controls.keys.has("arrowup")) {
+    movement.add(forward);
+  }
+
+  if (controls.keys.has("s") || controls.keys.has("arrowdown")) {
+    movement.sub(forward);
+  }
+
+  if (controls.keys.has("d") || controls.keys.has("arrowright")) {
+    movement.add(right);
+  }
+
+  if (controls.keys.has("a") || controls.keys.has("arrowleft")) {
+    movement.sub(right);
+  }
+
+  if (movement.lengthSq() === 0) {
+    return;
+  }
+
+  movement.normalize().multiplyScalar(controls.speed * delta);
+  camera.position.x = clamp(camera.position.x + movement.x, controls.bounds.minX, controls.bounds.maxX);
+  camera.position.z = clamp(camera.position.z + movement.z, controls.bounds.minZ, controls.bounds.maxZ);
+  camera.position.y = controls.cameraHeight;
+  applyDojoCamera(camera, controls);
+}
+
+function applyDojoCamera(camera, controls) {
+  const direction = new controls.Vector3(
+    Math.cos(controls.pitch) * Math.cos(controls.yaw),
+    Math.sin(controls.pitch),
+    Math.cos(controls.pitch) * Math.sin(controls.yaw),
+  );
+
+  camera.lookAt(camera.position.clone().add(direction));
+}
+
 function animateThreeRoom() {
-  const { renderer, scene, camera } = threeStage;
+  const { renderer, scene, camera, controls } = threeStage;
 
   if (!renderer || !scene || !camera) {
     return;
+  }
+
+  if (controls) {
+    updateDojoControls(camera, controls);
   }
 
   renderer.render(scene, camera);
